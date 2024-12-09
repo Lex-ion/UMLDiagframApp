@@ -41,6 +41,9 @@
 			pictureBox1.TabIndex = 0;
 			pictureBox1.TabStop = false;
 			pictureBox1.Paint += pictureBox1_Paint;
+			pictureBox1.MouseDown += Form1_MouseDown;
+			pictureBox1.MouseMove += Form1_MouseMove;
+			pictureBox1.MouseUp += Form1_MouseUp;
 			// 
 			// Form1
 			// 
@@ -50,6 +53,11 @@
 			Controls.Add(pictureBox1);
 			Name = "Form1";
 			Text = "Form1";
+			Scroll += Form1_Scroll;
+			MouseDown += Form1_MouseDown;
+			MouseMove += Form1_MouseMove;
+			MouseUp += Form1_MouseUp;
+			Resize += Form1_Resize;
 			((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
 			ResumeLayout(false);
 		}

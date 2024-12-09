@@ -9,9 +9,9 @@ namespace UMLDiagframApp.Entities
 {
 	interface IDrawable
 	{
-		public Vector<int> Position { get; set; }
+		public int X { get; set; }
+		public int Y { get; set; }
 
-
-		public void Draw();
+		public void Draw(DrawArgs args, Graphics g);
 	}
 }
