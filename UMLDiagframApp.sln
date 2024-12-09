@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UMLDiagframApp", "UMLDiagframApp\UMLDiagframApp.csproj", "{C4C3D7E9-AFFE-4962-B628-CC18AB39BE50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C4C3D7E9-AFFE-4962-B628-CC18AB39BE50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4C3D7E9-AFFE-4962-B628-CC18AB39BE50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4C3D7E9-AFFE-4962-B628-CC18AB39BE50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4C3D7E9-AFFE-4962-B628-CC18AB39BE50}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C09BDAC9-3CB3-44C0-8B3B-A5EA33C8A267}
+	EndGlobalSection
+EndGlobal
