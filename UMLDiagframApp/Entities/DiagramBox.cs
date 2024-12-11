@@ -14,9 +14,15 @@
 
 		public override void Draw(DrawArgs args, Graphics g)
 		{
-			g.FillRectangle(isSelected ? Brushes.CadetBlue : Brushes.Aqua, new((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + args.ViewportOffsetY) * args.ViewportScale)
+			
+
+			Color c = Color.FromArgb(64, 0, 0, 0);
+
+			g.FillRectangle(new SolidBrush(c) , new((int)((X+5 + args.ViewportOffsetX) * args.ViewportScale), (int)((Y+9 + args.ViewportOffsetY) * args.ViewportScale)
 				, (int)((width) * args.ViewportScale), (int)((height) * args.ViewportScale)));
 
+			g.FillRectangle(isSelected ? Brushes.CadetBlue : Brushes.Aqua, new((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + args.ViewportOffsetY) * args.ViewportScale)
+				, (int)((width) * args.ViewportScale), (int)((height) * args.ViewportScale)));
 
 			g.FillRectangle(Brushes.DarkCyan, new((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + args.ViewportOffsetY) * args.ViewportScale)
 				, (int)((width) * args.ViewportScale), (int)((30) * args.ViewportScale)));
