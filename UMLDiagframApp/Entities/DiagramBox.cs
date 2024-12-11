@@ -24,7 +24,7 @@
 			Font f = new(FontFamily.GenericMonospace, 15 * args.ViewportScale, FontStyle.Regular);
 
 			g.DrawString(Name, f, Brushes.Black, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + args.ViewportOffsetY) * args.ViewportScale)
-				, (int)((width) * args.ViewportScale), (int)(( 30) * args.ViewportScale)));
+				, (int)((width) * args.ViewportScale), (int)(( 30) * args.ViewportScale)),new StringFormat() { Alignment=StringAlignment.Center, LineAlignment = StringAlignment.Center});
 		}
 
 		public override void MouseInput(MouseArgs mArgs, DrawArgs dArgs)
