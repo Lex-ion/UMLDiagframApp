@@ -29,10 +29,14 @@ namespace UMLDiagframApp
 				}
 			}
 
-			DiagramBox db = new DiagramBox("Test", 0, 0, 100, 300);
+			for (int i = 0; i < 5; i++)
+			{
+
+			DiagramBox db = new DiagramBox("Test" +i, 0+i*10, 0 + i * 10, 100, 300);
 
 			_drawables.Add(db);
 			_selectables.Add(db);
+			}
 
 			_args.ViewportScale = 1;
 			_args.ViewportSizeX = width;
@@ -41,6 +45,8 @@ namespace UMLDiagframApp
 		public void Draw(Graphics g)
 		{
 			//g.ScaleTransform(_args.ViewportScale, _args.ViewportScale);
+
+
 
 
 			_drawables.ForEach(d => d.Draw(_args, g));
@@ -61,7 +67,13 @@ namespace UMLDiagframApp
 				if (s.IsSelected(args.PositionX, args.PositionY, _args))
 				{
 					_selected = s;
-					continue;
+					_selectables.Remove(s);
+					_selectables.Add(s);
+
+					_drawables.Remove(s);
+					_drawables.Add(s);
+
+					break;
 				}
 
 				_selected = null;
