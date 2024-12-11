@@ -42,11 +42,20 @@ namespace UMLDiagframApp
 			_args.ViewportSizeX = width;
 			_args.ViewportSizeY = height;
 		}
+
+
 		public void Draw(Graphics g)
 		{
-			//g.ScaleTransform(_args.ViewportScale, _args.ViewportScale);
-
-
+			g.SmoothingMode=System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+			g.FillRectangle(Brushes.DimGray, new RectangleF(0, 0, _args.ViewportSizeX, _args.ViewportSizeY));
+	
+			int i = -2;
+			int step = 50;
+			do
+			{
+				g.FillPolygon(Brushes.DarkSlateGray, [new PointF((i*step+ (_args.ViewportOffsetX * _args) % step)*1,0),new PointF((25+i*step + (_args.ViewportOffsetX * _args) % step) *1,0), new PointF((25 + i * step-200 + (_args.ViewportOffsetX * _args) % step) *1, _args.ViewportSizeY), new PointF((i * step - 200 + (_args.ViewportOffsetX * _args) % step) *1, _args.ViewportSizeY)]);
+				i++;
+			}while ((i * step - 200 + (_args.ViewportOffsetX*_args) % step) *1<_args.ViewportSizeX);
 
 
 			_drawables.ForEach(d => d.Draw(_args, g));
