@@ -35,9 +35,11 @@ namespace UMLDiagframApp
 				rightMouseDown = false;
 
 
-			_lastMouseArgs = new(e.Button, e.X, e.Y, -_lastMouseArgs.Value.PostitionX + e.X, -_lastMouseArgs.Value.PostitionY + e.Y, 0, rightMouseDown, leftMouseDown);
+			_lastMouseArgs = new(e.Button, e.X, e.Y, -_lastMouseArgs.Value.PositionX + e.X, -_lastMouseArgs.Value.PositionY + e.Y, 0, rightMouseDown, leftMouseDown);
 
 			_vp.MouseInput(_lastMouseArgs.Value);
+
+			pictureBox1.Refresh();
 		}
 
 		private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -49,7 +51,7 @@ namespace UMLDiagframApp
 			if (e.Button == MouseButtons.Right)
 				rightMouseDown = true;
 
-			_lastMouseArgs = new(e.Button, e.X, e.Y, -_lastMouseArgs.Value.PostitionX + e.X, -_lastMouseArgs.Value.PostitionY + e.Y, 0, rightMouseDown, leftMouseDown);
+			_lastMouseArgs = new(e.Button, e.X, e.Y, -_lastMouseArgs.Value.PositionX + e.X, -_lastMouseArgs.Value.PositionY + e.Y, 0, rightMouseDown, leftMouseDown);
 
 			_vp.MouseInput(_lastMouseArgs.Value);
 
@@ -60,7 +62,7 @@ namespace UMLDiagframApp
 		{
 
 			_lastMouseArgs ??= new(0, 0, 0, 0, 0, 0, rightMouseDown, leftMouseDown);
-			_lastMouseArgs = new(_lastMouseArgs.Value.Button, _lastMouseArgs.Value.PostitionX, _lastMouseArgs.Value.PostitionY, 0, 0, e.OldValue - e.NewValue, rightMouseDown, leftMouseDown);
+			_lastMouseArgs = new(_lastMouseArgs.Value.Button, _lastMouseArgs.Value.PositionX, _lastMouseArgs.Value.PositionY, 0, 0, e.OldValue - e.NewValue, rightMouseDown, leftMouseDown);
 			_vp.MouseInput(_lastMouseArgs.Value);
 
 			pictureBox1.Refresh();
@@ -69,7 +71,7 @@ namespace UMLDiagframApp
 		private void Form1_MouseMove(object sender, MouseEventArgs e)
 		{
 			_lastMouseArgs ??= new(e.Button, e.X, e.Y, 0, 0, 0, rightMouseDown, leftMouseDown);
-			_lastMouseArgs = new(e.Button, e.X, e.Y, -_lastMouseArgs.Value.PostitionX + e.X, -_lastMouseArgs.Value.PostitionY + e.Y, 0, rightMouseDown, leftMouseDown);
+			_lastMouseArgs = new(e.Button, e.X, e.Y, -_lastMouseArgs.Value.PositionX + e.X, -_lastMouseArgs.Value.PositionY + e.Y, 0, rightMouseDown, leftMouseDown);
 
 			_vp.MouseInput(_lastMouseArgs.Value);
 

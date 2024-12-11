@@ -24,5 +24,25 @@ namespace UMLDiagframApp.Entities
 			ViewportOffsetY = viewportOffsetY;
 			ViewportScale = viewportScale;
 		}
+
+		public static (int, int) operator +(DrawArgs drawArgs, Vector2 position)
+			=> new((int)((position.X + drawArgs.ViewportOffsetX) * drawArgs.ViewportScale), (int)((position.Y+drawArgs.ViewportOffsetY)*drawArgs.ViewportScale));
+
+
+		public static (int, int) operator +(DrawArgs drawArgs, (int,int) position)
+			=> new((int)((position.Item1 + drawArgs.ViewportOffsetX) * drawArgs.ViewportScale), (int)((position.Item2 + drawArgs.ViewportOffsetY) * drawArgs.ViewportScale));
+
+		public static (int, int) operator +((int,int) position, DrawArgs drawArgs)
+			=> new((int)((position.Item1 + drawArgs.ViewportOffsetX) * drawArgs.ViewportScale), (int)((position.Item2 + drawArgs.ViewportOffsetY) * drawArgs.ViewportScale));
+
+
+
+		public static int operator *(DrawArgs drawArgs, int i)
+			=> (int)(i*drawArgs.ViewportScale);
+		public static int operator *( int i, DrawArgs drawArgs)
+		=> (int)(i * drawArgs.ViewportScale);
+
+		public static int operator /(int i, DrawArgs drawArgs)
+		=> (int)(i / drawArgs.ViewportScale);
 	}
 }

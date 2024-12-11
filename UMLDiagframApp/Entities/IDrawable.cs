@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace UMLDiagframApp.Entities
 {
-	interface IDrawable
+	public interface IDrawable
 	{
 		public int X { get; set; }
 		public int Y { get; set; }

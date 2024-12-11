@@ -11,11 +11,14 @@ namespace UMLDiagframApp.Entities
 	{
 		public readonly MouseButtons Button { get;  }
 
-		public readonly int PostitionX { get; }
-		public readonly int PostitionY { get; }
+		public readonly int PositionX { get; }
+		public readonly int PositionY { get; }
 
-		public readonly int PostitionXDelta { get; }
-		public readonly int PostitionYDelta { get; }
+
+   
+
+        public  int PositionXDelta { get; set; }
+		public  int PositionYDelta { get; set; }
 
 
 		public readonly int Scroll { get; }
@@ -23,13 +26,13 @@ namespace UMLDiagframApp.Entities
 		public readonly bool RightMouseDown { get; }
 		public readonly bool LeftMouseDown { get; }
 
-		public MouseArgs(MouseButtons button, int postitionX, int postitionY, int postitionXDelta, int postitionYDelta, int scroll, bool rightMouseDown, bool leftMouseDown)
+		public MouseArgs(MouseButtons button, int positionX, int positionY, int positionXDelta, int positionYDelta, int scroll, bool rightMouseDown, bool leftMouseDown)
 		{
 			Button = button;
-			PostitionX = postitionX;
-			PostitionY = postitionY;
-			PostitionXDelta = postitionXDelta;
-			PostitionYDelta = postitionYDelta;
+			PositionX = positionX;
+			PositionY = positionY;
+			PositionXDelta = positionXDelta;
+			PositionYDelta = positionYDelta;
 			Scroll = scroll;
 			RightMouseDown = rightMouseDown;
 			LeftMouseDown = leftMouseDown;
