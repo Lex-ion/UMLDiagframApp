@@ -16,7 +16,10 @@ namespace UMLDiagframApp.Presentation
 
 
         public int Y { get => _y; set => _y = value; }
-        private int _y;
+
+		public bool Destroyed { get; private set; }
+
+		private int _y;
 
         public Circle(int x, int y)
         {
@@ -28,5 +31,10 @@ namespace UMLDiagframApp.Presentation
         {
             g.FillEllipse(Brushes.Black, (X + args.ViewportOffsetX) * args.ViewportScale, (Y + args.ViewportOffsetY) * args.ViewportScale, 15 * args.ViewportScale, 15 * args.ViewportScale);
         }
-    }
+
+		public void Destroy()
+		{
+            Destroyed = true;
+		}
+	}
 }

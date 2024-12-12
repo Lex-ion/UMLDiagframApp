@@ -11,8 +11,9 @@ namespace UMLDiagframApp.Presentation
     {
         public virtual int X { get => _x; set => _x = value; }
         public virtual int Y { get => _y; set => _y = value; }
+		public bool Destroyed { get; private set; }
 
-        protected int width;
+		protected int width;
         protected int height;
 
         protected bool isSelected;
@@ -30,9 +31,8 @@ namespace UMLDiagframApp.Presentation
 
         public abstract void Draw(DrawArgs args, Graphics g);
 
-        public bool IsSelected(int x, int y, DrawArgs args)
+        public virtual bool IsSelected(int x, int y, DrawArgs args)
         {
-
             isSelected =
                 x >= (X + args.ViewportOffsetX) * args.ViewportScale && x <= (X + width + args.ViewportOffsetX) * args.ViewportScale &&
                 y >= (Y + args.ViewportOffsetY) * args.ViewportScale && y <= (Y + height + args.ViewportOffsetY) * args.ViewportScale;
@@ -40,5 +40,10 @@ namespace UMLDiagframApp.Presentation
         }
 
         public abstract void MouseInput(MouseArgs mArgs, DrawArgs dArgs);
-    }
+
+		public virtual void Destroy()
+		{
+            Destroyed = true;
+		}
+	}
 }

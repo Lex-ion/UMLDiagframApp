@@ -61,9 +61,31 @@ namespace UMLDiagframApp.Presentation
                 i++;
             } while ((i * step - 200 + _args.ViewportOffsetX * _args % step) * 1 < _args.ViewportSizeX);
 
+            List<IDrawable> destroyList = new List<IDrawable>();
 
-            _drawables.ForEach(d => d.Draw(_args, g));
+            foreach (var d in _drawables)
+            {
+                if (d.Destroyed)
+                {
+                    destroyList.Add(d);
 
+                 
+
+                    continue;
+                }
+                d.Draw(_args, g);
+
+			}
+
+            foreach (var d in destroyList)
+            {
+				_drawables.Remove(d);
+
+				if (d is ISelectable)
+				{
+					_selectables.Remove((d as ISelectable)!);
+				}
+			}
 
             g.DrawString("Offset: " + _args.ViewportOffsetX + " ; " + _args.ViewportOffsetY, SystemFonts.DefaultFont, Brushes.Black, new PointF(10, 10));
             g.DrawString("Size: " + _args.ViewportSizeX + " ; " + _args.ViewportSizeY, SystemFonts.DefaultFont, Brushes.Black, new PointF(10, 20));
@@ -130,8 +152,17 @@ namespace UMLDiagframApp.Presentation
 
 
                 }
+                else if(args.ButtonState==MouseButtonsStates.RightUp)
+                {
+                    var cords = (args.PositionX-_args.ViewportOffsetX, args.PositionY-_args.ViewportOffsetY) ;
+                    ContextMenu menu = new ContextMenu(cords.Item1-1, cords.Item2-1, 150, 250, new());
+
+                    _drawables.Add(menu);
+                    _selectables.Add(menu);
+                    _selected = menu;
+                }
                 else
-                if (args.RightMouseDown)
+                if (args.ButtonState==MouseButtonsStates.RightHold&&args.PositionXDelta!=0)
                 {
                     _command = (args) =>
                     {
@@ -148,11 +179,8 @@ namespace UMLDiagframApp.Presentation
                     _args.ViewportOffsetX = (int)((_args.ViewportSizeX / 2 - (int)_drawables.Average(d => d.X * _args.ViewportScale)) / _args.ViewportScale);
                     _args.ViewportOffsetY = (int)((_args.ViewportSizeY / 2 - (int)_drawables.Average(d => d.Y * _args.ViewportScale)) / _args.ViewportScale);
                 }
-                else
-                if (args.Button == MouseButtons.Right && !args.RightMouseDown)
-                {
-                    _drawables.Add(new Circle((int)(args.PositionX / _args.ViewportScale) - _args.ViewportOffsetX, (int)(args.PositionY / _args.ViewportScale) - _args.ViewportOffsetY));
-                }
+
+              
 
             }
             _command?.Invoke(args);
