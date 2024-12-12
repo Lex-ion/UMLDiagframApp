@@ -9,7 +9,8 @@ namespace UMLDiagframApp.Entities
 {
 	public struct MouseArgs
 	{
-		public readonly MouseButtons Button { get;  }
+		public readonly MouseButtons Button { get; }
+		public readonly MouseButtonsStates ButtonState { get; }
 
 		public readonly int PositionX { get; }
 		public readonly int PositionY { get; }
@@ -26,8 +27,10 @@ namespace UMLDiagframApp.Entities
 		public readonly bool RightMouseDown { get; }
 		public readonly bool LeftMouseDown { get; }
 
-		public MouseArgs(MouseButtons button, int positionX, int positionY, int positionXDelta, int positionYDelta, int scroll, bool rightMouseDown, bool leftMouseDown)
+		public MouseArgs(MouseButtons button,MouseArgs? oldArgs, int positionX, int positionY, int positionXDelta, int positionYDelta, int scroll, bool rightMouseDown, bool leftMouseDown)
 		{
+			
+
 			Button = button;
 			PositionX = positionX;
 			PositionY = positionY;
@@ -36,6 +39,26 @@ namespace UMLDiagframApp.Entities
 			Scroll = scroll;
 			RightMouseDown = rightMouseDown;
 			LeftMouseDown = leftMouseDown;
+
+
+			if ((int)button == (int)(oldArgs?.Button??Button))
+			{
+				if (button == MouseButtons.None)
+					return;
+				ButtonState = (MouseButtonsStates)((int)button+1);
+			}
+
+			else if (button==MouseButtons.None&& (oldArgs?.Button ?? Button)!=MouseButtons.None)
+			{
+				ButtonState= (MouseButtonsStates)((int)(oldArgs?.Button ?? Button) + 2);
+			}
+
+			else if ((oldArgs?.Button ?? Button) == MouseButtons.None)
+			{
+				ButtonState= (MouseButtonsStates)Button;
+			}
+
+			
 		}
 	}
 

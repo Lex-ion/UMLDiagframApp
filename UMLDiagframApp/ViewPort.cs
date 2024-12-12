@@ -11,11 +11,15 @@ namespace UMLDiagframApp
 		List<ISelectable> _selectables;
 		ISelectable? _selected;
 
+		Action<MouseArgs>? _command;
+
 		int x;
 		int y;
 
 		int dx;
 		int dy;
+
+		MouseArgs? mouseArgs;
 		public ViewPort(int width, int height)
 		{
 			_args = new();
@@ -32,10 +36,10 @@ namespace UMLDiagframApp
 			for (int i = 0; i < 5; i++)
 			{
 
-			DiagramBox db = new DiagramBox("Test" +i, 0+i*10, 0 + i * 10, 100, 300);
+				DiagramBox db = new DiagramBox("Test" + i, 0 + i * 10, 0 + i * 10, 100, 300);
 
-			_drawables.Add(db);
-			_selectables.Add(db);
+				_drawables.Add(db);
+				_selectables.Add(db);
 			}
 
 			_args.ViewportScale = 1;
@@ -46,16 +50,16 @@ namespace UMLDiagframApp
 
 		public void Draw(Graphics g)
 		{
-			g.SmoothingMode=System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-			g.FillRectangle(Brushes.DimGray, new RectangleF(0, 0, _args.ViewportSizeX, _args.ViewportSizeY));
-	
-			int i = -2;
+			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+			g.FillRectangle(Brushes.DimGray, new RectangleF(-1, 0, _args.ViewportSizeX + 1, _args.ViewportSizeY));
+
+			int i = -0;
 			int step = 50;
 			do
 			{
-				g.FillPolygon(Brushes.DarkSlateGray, [new PointF((i*step+ (_args.ViewportOffsetX * _args) % step)*1,0),new PointF((25+i*step + (_args.ViewportOffsetX * _args) % step) *1,0), new PointF((25 + i * step-200 + (_args.ViewportOffsetX * _args) % step) *1, _args.ViewportSizeY), new PointF((i * step - 200 + (_args.ViewportOffsetX * _args) % step) *1, _args.ViewportSizeY)]);
+				g.FillPolygon(Brushes.DarkSlateGray, [new PointF((i * step + (_args.ViewportOffsetX * _args) % step) * 1, 0), new PointF((25 + i * step + (_args.ViewportOffsetX * _args) % step) * 1, 0), new PointF((25 + i * step - 200 + (_args.ViewportOffsetX * _args) % step) * 1, _args.ViewportSizeY), new PointF((i * step - 200 + (_args.ViewportOffsetX * _args) % step) * 1, _args.ViewportSizeY)]);
 				i++;
-			}while ((i * step - 200 + (_args.ViewportOffsetX*_args) % step) *1<_args.ViewportSizeX);
+			} while ((i * step - 200 + (_args.ViewportOffsetX * _args) % step) * 1 < _args.ViewportSizeX);
 
 
 			_drawables.ForEach(d => d.Draw(_args, g));
@@ -66,69 +70,105 @@ namespace UMLDiagframApp
 			g.DrawString("Scale: " + _args.ViewportScale, SystemFonts.DefaultFont, Brushes.Black, new PointF(10, 30));
 			g.DrawString("Mouse: " + x + " ; " + y, SystemFonts.DefaultFont, Brushes.Black, new PointF(10, 40));
 			g.DrawString("Mouse deltas: " + dx + " ; " + dy, SystemFonts.DefaultFont, Brushes.Black, new PointF(10, 50));
+			g.DrawString("Mouse state: " + mouseArgs?.Button + " ; " + mouseArgs?.ButtonState + " ; " + mouseArgs?.LeftMouseDown + " ; " + mouseArgs?.RightMouseDown, SystemFonts.DefaultFont, Brushes.Black, new PointF(10, 60));
+
+
 		}
 
 
 		public void MouseInput(MouseArgs args)
 		{
-			foreach (var s in _selectables.ToArray().Reverse())
+
+			if (_command is null)
 			{
-				if (s.IsSelected(args.PositionX, args.PositionY, _args))
+
+
+				foreach (var s in _selectables.ToArray().Reverse())
 				{
-					_selected = s;
-					_selectables.Remove(s);
-					_selectables.Add(s);
+					if (s.IsSelected(args.PositionX, args.PositionY, _args))
+					{
+						_selected = s;
 
-					_drawables.Remove(s);
-					_drawables.Add(s);
+						_selectables.Remove(s);
+						_selectables.Add(s);
 
-					break;
+						_drawables.Remove(s);
+						_drawables.Add(s);
+
+
+						break;
+					}
+
+					_selected = null;
+
 				}
 
-				_selected = null;
+
+
+				if (_selected != null)
+				{
+					_command = (args) =>
+					{
+					_selected.MouseInput(args, _args);
+						if (args.ButtonState == MouseButtonsStates.None || args.ButtonState == MouseButtonsStates.LeftUp)
+							_command = null;
+					};
+					
+
+					
+				}
+				else
+				if (args.LeftMouseDown)
+				{
+					_command = (args) =>
+					{
+
+					Cursor.Current = Cursors.SizeAll;
+					_args.ViewportOffsetX += (int)(args.PositionXDelta / _args.ViewportScale);
+					_args.ViewportOffsetY += (int)(args.PositionYDelta / _args.ViewportScale);
+					};
+
+
+				}
+				else
+				if (args.RightMouseDown)
+				{
+					_command = (args) =>
+					{
+
+
+					Cursor.Current = Cursors.SizeNS;
+					_args.ViewportScale -= (float)args.PositionYDelta / 50;
+					_args.ViewportScale = Math.Clamp(_args.ViewportScale, 0.1f, 2.5f);
+					};
+				}
+				else
+				if (args.Button == MouseButtons.Middle)
+				{
+					_args.ViewportOffsetX = (int)((_args.ViewportSizeX / 2 - (int)_drawables.Average(d => d.X * _args.ViewportScale)) / _args.ViewportScale);
+					_args.ViewportOffsetY = (int)((_args.ViewportSizeY / 2 - (int)_drawables.Average(d => d.Y * _args.ViewportScale)) / _args.ViewportScale);
+				}
+				else
+				if (args.Button == MouseButtons.Right && !args.RightMouseDown)
+				{
+					_drawables.Add(new Circle((int)((args.PositionX) / _args.ViewportScale) - _args.ViewportOffsetX, (int)((args.PositionY) / _args.ViewportScale) - _args.ViewportOffsetY));
+				}
 
 			}
+			_command?.Invoke(args);
 
-
-
-			if (_selected != null)
+			if (((int)args.ButtonState&0x0ffff) == 2)
 			{
-				_selected.MouseInput(args, _args);
-			}
-			else
-			if (args.LeftMouseDown)
-			{
-				Cursor.Current = Cursors.SizeAll;
-				_args.ViewportOffsetX += (int)(args.PositionXDelta / _args.ViewportScale);
-				_args.ViewportOffsetY += (int)(args.PositionYDelta / _args.ViewportScale);
-
-
-			}
-			else
-			if (args.RightMouseDown)
-			{
-				Cursor.Current = Cursors.SizeNS;
-				_args.ViewportScale -= (float)args.PositionYDelta / 50;
-				_args.ViewportScale = Math.Clamp(_args.ViewportScale, 0.1f, 2.5f);
-			}
-			else
-			if (args.Button == MouseButtons.Middle)
-			{
-				_args.ViewportOffsetX = (int)((_args.ViewportSizeX / 2 - (int)_drawables.Average(d => d.X * _args.ViewportScale)) / _args.ViewportScale);
-				_args.ViewportOffsetY = (int)((_args.ViewportSizeY / 2 - (int)_drawables.Average(d => d.Y * _args.ViewportScale)) / _args.ViewportScale);
-			}
-			else
-			if (args.Button == MouseButtons.Right && !args.RightMouseDown)
-			{
-				_drawables.Add(new Circle((int)((args.PositionX) / _args.ViewportScale) - _args.ViewportOffsetX, (int)((args.PositionY) / _args.ViewportScale) - _args.ViewportOffsetY));
+				_command = null;
 			}
 
-		
 
 			x = args.PositionX;
 			y = args.PositionY;
 			dx = args.PositionXDelta;
 			dy = args.PositionYDelta;
+
+			mouseArgs = args;
 		}
 
 		public void Resize(int width, int height)
