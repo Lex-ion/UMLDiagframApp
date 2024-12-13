@@ -1,10 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UMLDiagframApp.Entities;
+﻿using UMLDiagframApp.Entities;
 using UMLDiagframApp.Presentation;
 using UMLDiagframApp.ValidationStrategies;
 
@@ -18,14 +12,14 @@ namespace UMLDiagframApp
 
 		DrawArgs _args;
 
-		public ContextMenuFactory(List<IDrawable> drawables, List<ISelectable> selectables, DrawArgs drawArgs	)
+		public ContextMenuFactory(List<IDrawable> drawables, List<ISelectable> selectables, DrawArgs drawArgs)
 		{
 			_drawables = drawables;
 			_selectables = selectables;
 			_args = drawArgs;
 		}
 
-		public  ContextMenu GetViewPortMenu(int x, int y)
+		public ContextMenu GetViewPortMenu(int x, int y)
 		{
 			return new ContextMenu(x, y, [
 				new("Přidat",()=>CreateNew(x,y)),
@@ -34,16 +28,18 @@ namespace UMLDiagframApp
 				]);
 		}
 
-		public  ContextMenu GetSelectedBoxMenu(int x, int y, ISelectable selected)
+		public ContextMenu GetSelectedBoxMenu(int x, int y, ISelectable selected)
 		{
 			ContextMenuCommand[] baseCommands = [       new("Odstranit",()=>Delete(selected))
 				];
-			ContextMenuCommand[] boxCommands = [       new("Přejmenovat",()=>Rename(selected as DiagramBox))
+			ContextMenuCommand[] boxCommands = [
+				new("Přejmenovat",()=>Rename(selected as DiagramBox)),
+				new("Přidat Metodu",()=>AddMethod(selected as DiagramBox)),
 			];
 
-			List<ContextMenuCommand> cmds=new();
+			List<ContextMenuCommand> cmds = new();
 
-			baseCommands.ToList().ForEach(c=>cmds.Add(c));
+			baseCommands.ToList().ForEach(c => cmds.Add(c));
 
 			if (selected is DiagramBox)
 				boxCommands.ToList().ForEach(cmds.Add);
@@ -66,14 +62,14 @@ namespace UMLDiagframApp
 		private void CreateNew(int x, int y)
 		{
 
-			TextInputForm t = new("", new ClassNameValidationStrategy(_selectables.Where(s=>s is DiagramBox).Select(s=>s as DiagramBox).ToList()!));
+			TextInputForm t = new("", new ClassNameValidationStrategy(_selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList()!));
 			t.ShowDialog();
 
 			if (t.DialogResult == DialogResult.Abort)
 			{
 				return;
 			}
-			DiagramBox d = new(t.Value, x/_args,y/_args, 0, 300);
+			DiagramBox d = new(t.Value, x / _args, y / _args, 0, 300);
 			_drawables.Add(d);
 			_selectables.Add(d);
 		}
@@ -86,13 +82,71 @@ namespace UMLDiagframApp
 
 		private void Rename(DiagramBox box)
 		{
-			TextInputForm t = new(box.Name,new ClassNameValidationStrategy(_selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList()!));
+			TextInputForm t = new(box.Name, new ClassNameValidationStrategy(_selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList()!));
 			t.ShowDialog();
 
-			if(t.DialogResult == DialogResult.OK)
+			if (t.DialogResult == DialogResult.OK)
 			{
 				box.Name = t.Value;
 			}
+		}
+
+		private void AddMethod(DiagramBox box)
+		{
+			TextInputForm t = new("", new MethodValidationStrategy());
+			t.ShowDialog();
+
+			if (t.DialogResult == DialogResult.Abort)
+			{
+				return;
+			}
+
+			ModifiersEnum modifiers;
+
+			switch (t.Value[0])
+			{
+				case '+':
+					modifiers = ModifiersEnum.Public; break;
+
+				case '#':
+					modifiers = ModifiersEnum.Protected; break;
+
+				case '~':
+					modifiers = ModifiersEnum.Internal; break;
+
+				case '-':
+					modifiers = ModifiersEnum.Private; break;
+				default:
+					switch (t.Value.Split(' ').First().ToLower())
+					{
+						default:
+							modifiers = ModifiersEnum.Public; break;
+
+						case "public":
+							modifiers = ModifiersEnum.Public; break;
+						case "private":
+							modifiers = ModifiersEnum.Private; break;
+						case "protected":
+							modifiers = ModifiersEnum.Protected; break;
+						case "internal":
+							modifiers = ModifiersEnum.Internal; break;
+					}
+					break;
+			}
+
+			string type = t.Value.Split(')').Last().Split(':').Last();
+			string name = t.Value[1..].Split('(').First();
+
+			string ps = t.Value.Split('(').Last().Split(')').First();
+
+
+
+
+			Entities.Method a = new(modifiers,type, name, ps);
+
+			box.Methods.Add(a);
+
+
 		}
 
 	}

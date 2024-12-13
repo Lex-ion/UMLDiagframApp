@@ -41,7 +41,7 @@ namespace UMLDiagframApp
 
 			DialogResult = DialogResult.OK;
 
-			Value = textBox1.Text;
+			Value = textBox1.Text.Trim() ;
 
 			Close();
 		}

@@ -14,12 +14,17 @@ namespace UMLDiagframApp.Presentation
 		bool focused;
 
 
+	//	public List<Entities.Method> Attributes { get; }
+		public List<Entities.Method> Methods { get; }
+
 
 		public DiagramBox(string name, int x, int y, int width, int height) : base(x, y, width, height)
 		{
 			Name = name;
 			_selectionX = null;
 			_selectionY = null;
+
+			Methods = new List<Entities.Method>();
 		}
 
 
@@ -32,6 +37,9 @@ namespace UMLDiagframApp.Presentation
 			g.ResetTransform();
 			g.ScaleTransform(args.ViewportScale, args.ViewportScale);
 			width = (int)Math.Ceiling( g.MeasureString(Name+new string('x',5),m).Width);
+
+
+
 			g.ScaleTransform(1, 1);
 			g.ResetTransform();
 			Color c = Color.FromArgb(64, 0, 0, 0);
