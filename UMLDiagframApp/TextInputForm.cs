@@ -1,16 +1,18 @@
 ﻿using System.ComponentModel;
+using UMLDiagframApp.ValidationStrategies;
 
 namespace UMLDiagframApp
 {
 	public partial class TextInputForm : Form
 	{
 		public string Value { get; set; }
-		public TextInputForm(string defaultText)
+		IValidationStrategy validationStrategy;
+		public TextInputForm(string defaultText, IValidationStrategy strategy)
 		{
 			InitializeComponent();
 			Value = "";
 			textBox1.Text = defaultText;
-
+			validationStrategy =strategy;
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -23,18 +25,12 @@ namespace UMLDiagframApp
 			Abort();
 		}
 
-		private void textBox1_Validating(object sender, CancelEventArgs e)
-		{
-			bool valid = !string.IsNullOrWhiteSpace(textBox1.Text);
-			errorProvider1.SetError(textBox1, valid ? null : "Toto pole je povinné!");
-			e.Cancel = !valid;
-		}
 
 		private bool IsValid()
 		{
 
-			bool valid = !string.IsNullOrWhiteSpace(textBox1.Text);
-			errorProvider1.SetError(textBox1, valid ? null : "Toto pole je povinné!");
+			bool valid = validationStrategy.Validate(textBox1.Text);
+			errorProvider1.SetError(textBox1, valid ? null : validationStrategy.Message);
 			return valid;
 		}
 

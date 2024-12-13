@@ -45,7 +45,6 @@
 			textBox1.Size = new Size(249, 16);
 			textBox1.TabIndex = 0;
 			textBox1.KeyUp += textBox1_KeyUp;
-			textBox1.Validating += textBox1_Validating;
 			// 
 			// button1
 			// 

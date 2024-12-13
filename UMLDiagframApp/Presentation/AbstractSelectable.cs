@@ -33,6 +33,8 @@ namespace UMLDiagframApp.Presentation
 
         public virtual bool IsSelected(int x, int y, DrawArgs args)
         {
+            
+
             isSelected =
                 x >= (X + args.ViewportOffsetX) * args.ViewportScale && x <= (X + width + args.ViewportOffsetX) * args.ViewportScale &&
                 y >= (Y + args.ViewportOffsetY) * args.ViewportScale && y <= (Y + height + args.ViewportOffsetY) * args.ViewportScale;

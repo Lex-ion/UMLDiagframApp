@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UMLDiagframApp.Entities;
 using UMLDiagframApp.Presentation;
+using UMLDiagframApp.ValidationStrategies;
 
 namespace UMLDiagframApp
 {
@@ -27,6 +28,7 @@ namespace UMLDiagframApp
 		public  ContextMenu GetViewPortMenu(int x, int y)
 		{
 			return new ContextMenu(x, y, [
+				new("Přidat",()=>CreateNew(x,y)),
 				new("Resetovat přiblížení",ResetScale),
 				new("Vycentrovat",Center),
 				]);
@@ -61,6 +63,21 @@ namespace UMLDiagframApp
 			_args.ViewportOffsetY = (int)((_args.ViewportSizeY / 2 - (int)_drawables.Average(d => d.Y * _args.ViewportScale)) / _args.ViewportScale);
 		}
 
+		private void CreateNew(int x, int y)
+		{
+
+			TextInputForm t = new("", new ClassNameValidationStrategy(_selectables.Where(s=>s is DiagramBox).Select(s=>s as DiagramBox).ToList()!));
+			t.ShowDialog();
+
+			if (t.DialogResult == DialogResult.Abort)
+			{
+				return;
+			}
+			DiagramBox d = new(t.Value, x/_args,y/_args, 0, 300);
+			_drawables.Add(d);
+			_selectables.Add(d);
+		}
+
 		private void Delete(ISelectable s)
 		{
 			_drawables.Remove(s);
@@ -69,7 +86,7 @@ namespace UMLDiagframApp
 
 		private void Rename(DiagramBox box)
 		{
-			TextInputForm t = new(box.Name);
+			TextInputForm t = new(box.Name,new ClassNameValidationStrategy(_selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList()!));
 			t.ShowDialog();
 
 			if(t.DialogResult == DialogResult.OK)
