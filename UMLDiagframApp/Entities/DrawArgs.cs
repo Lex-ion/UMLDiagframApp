@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace UMLDiagframApp.Entities
 {
-	public struct DrawArgs
+	public class DrawArgs
 	{
 		public int ViewportSizeX { get; set; }
 		public int ViewportSizeY { get; set; }
@@ -24,6 +24,9 @@ namespace UMLDiagframApp.Entities
 			ViewportOffsetY = viewportOffsetY;
 			ViewportScale = viewportScale;
 		}
+
+
+
 
 		public static (int, int) operator +(DrawArgs drawArgs, Vector2 position)
 			=> new((int)((position.X + drawArgs.ViewportOffsetX) * drawArgs.ViewportScale), (int)((position.Y+drawArgs.ViewportOffsetY)*drawArgs.ViewportScale));

@@ -20,9 +20,11 @@ namespace UMLDiagframApp.Presentation
         int dy;
 
         MouseArgs? mouseArgs;
+
+        ContextMenuFactory _menuFactory;
         public ViewPort(int width, int height)
         {
-            _args = new();
+            _args = new(width,height,0,0,1);
             _drawables = new List<IDrawable>();
             _selectables = new List<ISelectable>();
             for (int i = 0; i < 15; i++)
@@ -45,6 +47,8 @@ namespace UMLDiagframApp.Presentation
             _args.ViewportScale = 1;
             _args.ViewportSizeX = width;
             _args.ViewportSizeY = height;
+
+            _menuFactory = new(_drawables, _selectables,_args);
         }
 
 
@@ -142,7 +146,8 @@ namespace UMLDiagframApp.Presentation
 				else if (args.ButtonState == MouseButtonsStates.RightUp)
 				{
 					var cords = (args.PositionX - _args.ViewportOffsetX, args.PositionY - _args.ViewportOffsetY);
-					ContextMenu menu = new ContextMenu(cords.Item1 - 1, cords.Item2 - 1, [new("1 2 3", () => { }), new("123", () => { }), new("123456789", () => { })]);
+                    ContextMenu menu = _selected is null? _menuFactory.GetViewPortMenu(cords.Item1 - 1, cords.Item2 - 1)
+                        : _menuFactory.GetSelectedBoxMenu(cords.Item1 - 1, cords.Item2 - 1,_selected);
 
 					_drawables.Add(menu);
 					_selectables.Add(menu);
