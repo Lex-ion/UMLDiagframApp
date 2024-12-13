@@ -82,5 +82,7 @@ namespace UMLDiagframApp.Presentation
 
 			return isSelected;
 		}
+
+
 	}
 }

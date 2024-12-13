@@ -45,5 +45,6 @@ namespace UMLDiagframApp.Presentation
 		{
             Destroyed = true;
 		}
+
 	}
 }

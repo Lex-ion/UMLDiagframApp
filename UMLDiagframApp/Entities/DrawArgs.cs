@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
 namespace UMLDiagframApp.Entities
 {
@@ -29,22 +24,23 @@ namespace UMLDiagframApp.Entities
 
 
 		public static (int, int) operator +(DrawArgs drawArgs, Vector2 position)
-			=> new((int)((position.X + drawArgs.ViewportOffsetX) * drawArgs.ViewportScale), (int)((position.Y+drawArgs.ViewportOffsetY)*drawArgs.ViewportScale));
+			=> new((int)((position.X + drawArgs.ViewportOffsetX) * drawArgs.ViewportScale), (int)((position.Y + drawArgs.ViewportOffsetY) * drawArgs.ViewportScale));
 
 
-		public static (int, int) operator +(DrawArgs drawArgs, (int,int) position)
+		public static (int, int) operator +(DrawArgs drawArgs, (int, int) position)
 			=> new((int)((position.Item1 + drawArgs.ViewportOffsetX) * drawArgs.ViewportScale), (int)((position.Item2 + drawArgs.ViewportOffsetY) * drawArgs.ViewportScale));
 
-		public static (int, int) operator +((int,int) position, DrawArgs drawArgs)
+		public static (int, int) operator +((int, int) position, DrawArgs drawArgs)
 			=> new((int)((position.Item1 + drawArgs.ViewportOffsetX) * drawArgs.ViewportScale), (int)((position.Item2 + drawArgs.ViewportOffsetY) * drawArgs.ViewportScale));
 
 
 
 		public static int operator *(DrawArgs drawArgs, int i)
-			=> (int)(i*drawArgs.ViewportScale);
-		public static int operator *( int i, DrawArgs drawArgs)
+			=> (int)(i * drawArgs.ViewportScale);
+		public static int operator *(int i, DrawArgs drawArgs)
 		=> (int)(i * drawArgs.ViewportScale);
-
+		public static float operator *(float f, DrawArgs drawArgs)
+=> (f * drawArgs.ViewportScale);
 		public static int operator /(int i, DrawArgs drawArgs)
 		=> (int)(i / drawArgs.ViewportScale);
 	}

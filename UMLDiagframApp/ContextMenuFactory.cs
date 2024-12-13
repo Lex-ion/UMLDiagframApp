@@ -34,9 +34,19 @@ namespace UMLDiagframApp
 
 		public  ContextMenu GetSelectedBoxMenu(int x, int y, ISelectable selected)
 		{
-			return new ContextMenu(x, y, [
-				new("Odstranit",()=>Delete(selected))
-				]);
+			ContextMenuCommand[] baseCommands = [       new("Odstranit",()=>Delete(selected))
+				];
+			ContextMenuCommand[] boxCommands = [       new("Přejmenovat",()=>Rename(selected as DiagramBox))
+			];
+
+			List<ContextMenuCommand> cmds=new();
+
+			baseCommands.ToList().ForEach(c=>cmds.Add(c));
+
+			if (selected is DiagramBox)
+				boxCommands.ToList().ForEach(cmds.Add);
+
+			return new ContextMenu(x, y, cmds);
 		}
 
 
@@ -55,6 +65,17 @@ namespace UMLDiagframApp
 		{
 			_drawables.Remove(s);
 			_selectables.Remove(s);
+		}
+
+		private void Rename(DiagramBox box)
+		{
+			TextInputForm t = new(box.Name);
+			t.ShowDialog();
+
+			if(t.DialogResult == DialogResult.OK)
+			{
+				box.Name = t.Value;
+			}
 		}
 
 	}

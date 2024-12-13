@@ -215,5 +215,13 @@ namespace UMLDiagframApp.Presentation
             _args.ViewportOffsetY -= deltaH / 2;
             _args.ViewportOffsetX -= deltaW / 2;
         }
-    }
+
+        public void HandleKeyInput(KeyEventArgs keyEvent)
+        {
+            if (_selected is not null)
+                return;
+            //system input handle ctrl+s and etc...
+        }
+
+	}
 }

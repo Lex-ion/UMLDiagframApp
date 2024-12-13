@@ -10,6 +10,7 @@ namespace UMLDiagframApp.Presentation
     public interface ISelectable : IDrawable
     {
         public bool IsSelected(int x, int y, DrawArgs args);
-        public void MouseInput(MouseArgs mArgs, DrawArgs dArgs);
-    }
+		public void MouseInput(MouseArgs mArgs, DrawArgs dArgs);
+
+	}
 }

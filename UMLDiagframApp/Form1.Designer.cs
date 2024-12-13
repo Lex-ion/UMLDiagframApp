@@ -54,6 +54,7 @@
 			Name = "Form1";
 			Text = "Form1";
 			Scroll += Form1_Scroll;
+			KeyDown += Form1_KeyDown;
 			MouseDown += Form1_MouseDown;
 			MouseMove += Form1_MouseMove;
 			MouseUp += Form1_MouseUp;

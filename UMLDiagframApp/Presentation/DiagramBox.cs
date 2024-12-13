@@ -14,6 +14,7 @@ namespace UMLDiagframApp.Presentation
 		bool focused;
 
 
+
 		public DiagramBox(string name, int x, int y, int width, int height) : base(x, y, width, height)
 		{
 			Name = name;
@@ -25,8 +26,14 @@ namespace UMLDiagframApp.Presentation
 
 		public override void Draw(DrawArgs args, Graphics g)
 		{
+			Font f = new(FontFamily.GenericMonospace, 15 * args.ViewportScale, FontStyle.Regular);
+			Font m = new(FontFamily.GenericMonospace, 15 , FontStyle.Regular);
 
-
+			g.ResetTransform();
+			g.ScaleTransform(args.ViewportScale, args.ViewportScale);
+			width = (int)Math.Ceiling( g.MeasureString(Name+new string('x',5),m).Width);
+			g.ScaleTransform(1, 1);
+			g.ResetTransform();
 			Color c = Color.FromArgb(64, 0, 0, 0);
 
 			g.FillRectangle(new SolidBrush(c), new((int)((X + 5 + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + 9 + args.ViewportOffsetY) * args.ViewportScale)
@@ -41,7 +48,6 @@ namespace UMLDiagframApp.Presentation
 			g.DrawRectangle(Pens.DarkBlue, new((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + args.ViewportOffsetY) * args.ViewportScale)
 			, (int)(width * args.ViewportScale), (int)(height * args.ViewportScale)));
 
-			Font f = new(FontFamily.GenericMonospace, 15 * args.ViewportScale, FontStyle.Regular);
 
 			g.DrawString(Name, f, Brushes.Black, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + args.ViewportOffsetY) * args.ViewportScale)
 				, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
@@ -95,5 +101,8 @@ namespace UMLDiagframApp.Presentation
 			}
 
 		}
+
+		
 	}
+
 }
