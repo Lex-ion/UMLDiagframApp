@@ -9,13 +9,11 @@ namespace UMLDiagframApp.Entities
 	public class ContextMenuCommand
 	{
 		public string Name { get; }
-		public int Group {  get; }
 		public Action Command { get; }
 
-		public ContextMenuCommand(string name, int group, Action command)
+		public ContextMenuCommand(string name, Action command)
 		{
 			Name = name;
-			Group = group;
 			Command = command;
 		}
 	}

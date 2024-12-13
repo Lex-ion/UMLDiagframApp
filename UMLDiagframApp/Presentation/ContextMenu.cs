@@ -10,11 +10,28 @@ namespace UMLDiagframApp.Presentation
 	public class ContextMenu : AbstractSelectable
 	{
 		private List<ContextMenuCommand> _commands;
+		private Font _font;
 
-		public ContextMenu(int x, int y, int width, int height, List<ContextMenuCommand> commands) : base(x, y, width, height)
-		{
+		int itemHeight;
+
+		int selectedIndex;
+
+		public ContextMenu(int x, int y,  List<ContextMenuCommand> commands) : base(x, y, 0, 0)
+		{ 
+			_font = new(FontFamily.GenericMonospace, 15);
 			_commands = commands;
 
+			itemHeight = TextRenderer.MeasureText("0", _font).Height;
+
+			height = itemHeight*commands.Count;
+
+			foreach (ContextMenuCommand command in _commands)
+			{
+				int w =	TextRenderer.MeasureText(command.Name,_font).Width;
+				if (w > base.width) {
+				base.width = w;
+				}
+			}
 		}
 
 		public override void Draw(DrawArgs args, Graphics g)
@@ -23,12 +40,34 @@ namespace UMLDiagframApp.Presentation
 			g.FillRectangle(Brushes.LightCyan, r);
 			g.DrawRectangle(Pens.DarkSlateBlue, r);
 
-			g.DrawString("Lorem",new (FontFamily.GenericMonospace,15),Brushes.Black,new PointF(X+args.ViewportOffsetX,Y+args.ViewportOffsetY));
+			
+			int i = 0;
+			foreach (var c in _commands)
+			{
+				if (i == selectedIndex)
+				{
+					g.FillRectangle(Brushes.WhiteSmoke, new(X+args.ViewportOffsetX, Y + args.ViewportOffsetY + i * itemHeight,width,itemHeight));
+				}
 
+				g.DrawString(c.Name, _font, Brushes.Black, new PointF(X + args.ViewportOffsetX, Y + args.ViewportOffsetY+i*itemHeight));
+				i++;
+			}
 		}
 
 		public override void MouseInput(MouseArgs mArgs, DrawArgs dArgs)
 		{
+			selectedIndex = (mArgs.PositionY - Y-dArgs.ViewportOffsetY) / itemHeight;
+
+			if (mArgs.ButtonState == MouseButtonsStates.LeftUp)
+			{
+				if (selectedIndex >= 0 && selectedIndex < _commands.Count)
+				{
+				_commands[selectedIndex].Command.Invoke();
+
+				Destroy();
+				}
+
+			}
 		}
 
 		public override bool IsSelected(int x, int y, DrawArgs args)

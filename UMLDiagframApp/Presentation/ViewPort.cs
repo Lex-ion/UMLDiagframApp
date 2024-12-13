@@ -127,7 +127,7 @@ namespace UMLDiagframApp.Presentation
 
 
 
-                if (_selected != null)
+                if (_selected != null&&(int)args.ButtonState< 0x00200000)
                 {
                     _command = (args) =>
                     {
@@ -139,7 +139,16 @@ namespace UMLDiagframApp.Presentation
 
 
                 }
-                else
+				else if (args.ButtonState == MouseButtonsStates.RightUp)
+				{
+					var cords = (args.PositionX - _args.ViewportOffsetX, args.PositionY - _args.ViewportOffsetY);
+					ContextMenu menu = new ContextMenu(cords.Item1 - 1, cords.Item2 - 1, [new("1 2 3", () => { }), new("123", () => { }), new("123456789", () => { })]);
+
+					_drawables.Add(menu);
+					_selectables.Add(menu);
+					_selected = menu;
+				}
+				else
                 if (args.LeftMouseDown)
                 {
                     _command = (args) =>
@@ -151,18 +160,8 @@ namespace UMLDiagframApp.Presentation
                     };
 
 
-                }
-                else if(args.ButtonState==MouseButtonsStates.RightUp)
-                {
-                    var cords = (args.PositionX-_args.ViewportOffsetX, args.PositionY-_args.ViewportOffsetY) ;
-                    ContextMenu menu = new ContextMenu(cords.Item1-1, cords.Item2-1, 150, 250, new());
-
-                    _drawables.Add(menu);
-                    _selectables.Add(menu);
-                    _selected = menu;
-                }
-                else
-                if (args.ButtonState==MouseButtonsStates.RightHold&&args.PositionXDelta!=0)
+                }             
+                if (args.ButtonState==MouseButtonsStates.RightHold&&args.PositionXDelta!=0&& _selected is null)
                 {
                     _command = (args) =>
                     {
