@@ -38,7 +38,11 @@ namespace UMLDiagframApp.Presentation
 			g.ScaleTransform(args.ViewportScale, args.ViewportScale);
 			width = (int)Math.Ceiling( g.MeasureString(Name+new string('x',5),m).Width);
 
-
+			foreach (var method in Methods)
+			{
+				int newWidth = (int)Math.Ceiling(g.MeasureString(method.ToString() + new string('x', 5), m).Width);
+				width= newWidth>width?newWidth:width;	
+			}
 
 			g.ScaleTransform(1, 1);
 			g.ResetTransform();
@@ -56,7 +60,7 @@ namespace UMLDiagframApp.Presentation
 			g.DrawRectangle(Pens.DarkBlue, new((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + args.ViewportOffsetY) * args.ViewportScale)
 			, (int)(width * args.ViewportScale), (int)(height * args.ViewportScale)));
 
-
+			
 			g.DrawString(Name, f, Brushes.Black, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + args.ViewportOffsetY) * args.ViewportScale)
 				, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
 
@@ -64,6 +68,13 @@ namespace UMLDiagframApp.Presentation
 				, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
 			g.DrawString("Y:" + Y, f, Brushes.Black, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + 60 + args.ViewportOffsetY) * args.ViewportScale)
 				, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+			int i=0;
+			foreach (var method in Methods)
+			{
+				g.DrawString(method.ToString(), f, Brushes.Black, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + 90+i*30 + args.ViewportOffsetY) * args.ViewportScale)
+			, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center });
+				i++;
+			}
 		}
 
 		public override void MouseInput(MouseArgs mArgs, DrawArgs dArgs)
