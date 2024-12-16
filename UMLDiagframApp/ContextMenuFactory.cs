@@ -34,7 +34,8 @@ namespace UMLDiagframApp
 				];
 			ContextMenuCommand[] boxCommands = [
 				new("Přejmenovat",()=>Rename(selected as DiagramBox)),
-				new("Přidat Metodu",()=>AddMethod(selected as DiagramBox)),
+				new("Přidat atribut",()=>AddAttribute(selected as DiagramBox)),
+				new("Přidat metodu",()=>AddMethod(selected as DiagramBox)),
 			];
 
 			List<ContextMenuCommand> cmds = new();
@@ -88,7 +89,9 @@ namespace UMLDiagframApp
 			if (t.DialogResult == DialogResult.OK)
 			{
 				box.Name = t.Value;
+				box.Changed = true;
 			}
+
 		}
 
 		private void AddMethod(DiagramBox box)
@@ -102,11 +105,14 @@ namespace UMLDiagframApp
 			}
 
 			ModifiersEnum modifiers;
-
+			string s;
+			s = t.Value[1..];
 			switch (t.Value[0])
 			{
 				case '+':
-					modifiers = ModifiersEnum.Public; break;
+					modifiers = ModifiersEnum.Public;
+					
+					break;
 
 				case '#':
 					modifiers = ModifiersEnum.Protected; break;
@@ -117,6 +123,7 @@ namespace UMLDiagframApp
 				case '-':
 					modifiers = ModifiersEnum.Private; break;
 				default:
+					s = t.Value.Split(' ').Last();
 					switch (t.Value.Split(' ').First().ToLower())
 					{
 						default:
@@ -134,10 +141,10 @@ namespace UMLDiagframApp
 					break;
 			}
 
-			string type = t.Value.Split(')').Last().Split(':').Last();
-			string name = t.Value[1..].Split('(').First();
+			string type = s.Split(')').Last().Split(':').Last();
+			string name = s.Split('(').First();
 
-			string ps = t.Value.Split('(').Last().Split(')').First();
+			string ps = s.Split('(').Last().Split(')').First();
 
 
 
@@ -145,8 +152,63 @@ namespace UMLDiagframApp
 			Entities.Method a = new(modifiers,type, name, ps);
 
 			box.Methods.Add(a);
+			box.Changed = true;
 
+		}
 
+		private void AddAttribute(DiagramBox box)
+		{
+			TextInputForm t = new("", new AttributeValidationStrategy());
+			t.ShowDialog();
+
+			if (t.DialogResult == DialogResult.Abort)
+			{
+				return;
+			}
+
+			ModifiersEnum modifiers;
+
+			string s;
+			s = t.Value[1..];
+			switch (t.Value[0])
+			{
+				case '+':
+					modifiers = ModifiersEnum.Public;
+
+					break;
+
+				case '#':
+					modifiers = ModifiersEnum.Protected; break;
+
+				case '~':
+					modifiers = ModifiersEnum.Internal; break;
+
+				case '-':
+					modifiers = ModifiersEnum.Private; break;
+				default:
+					s = t.Value.Split(' ').Last();
+					switch (t.Value.Split(' ').First().ToLower())
+					{
+						default:
+							modifiers = ModifiersEnum.Public; break;
+
+						case "public":
+							modifiers = ModifiersEnum.Public; break;
+						case "private":
+							modifiers = ModifiersEnum.Private; break;
+						case "protected":
+							modifiers = ModifiersEnum.Protected; break;
+						case "internal":
+							modifiers = ModifiersEnum.Internal; break;
+					}
+					break;
+			}
+
+			string name = s.Split(":").First();
+			string type = s.Split(":").Last();
+
+			box.Attributes.Add(new Entities.Attribute(modifiers,type,name));
+			box.Changed=true;
 		}
 
 	}
