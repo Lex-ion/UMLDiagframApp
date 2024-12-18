@@ -221,7 +221,7 @@ namespace UMLDiagframApp.Presentation
 			if (_selected is not null)
 				return;
 			//system input handle ctrl+s and etc...
-			if (keyEvent.KeyCode==Keys.E)
+			if (keyEvent.KeyCode == Keys.E)
 			{
 				ExportToPng();
 			}
@@ -231,57 +231,58 @@ namespace UMLDiagframApp.Presentation
 
 		public void ExportToPng()
 		{
-			ProgressForm progressForm = new(0, _drawables.Count*2,0);
+			ProgressForm progressForm = new(0, _drawables.Count * 2, 0);
 
-			
+
 
 			if (_drawables.Count <= 0)
 			{
 				return;
 			}
 
-			new Thread(() => { 
-
-			int progress = 0;
-			
-
-			Point upperCorner = new(_drawables[0].X, _drawables[1].Y);
-			Point lowerCorner = new(_drawables[0].X + _drawables[0].Width, _drawables[0].Y + _drawables[0].Height);
-
-			foreach (var drawable in _drawables[1..])
+			new Thread(() =>
 			{
-				progressForm.UpdateProgress(progress,"Výpočet velikosti");
-				if (drawable.X < upperCorner.X)
-					upperCorner.X = drawable.X;
-				if (drawable.Y < upperCorner.Y)
-					upperCorner.Y = drawable.Y;
 
-				if (drawable.X + drawable.Width > lowerCorner.X)
-					lowerCorner.X = drawable.X + drawable.Width;
-				if (drawable.Y + drawable.Height > lowerCorner.Y)
-					lowerCorner.Y = drawable.Y + drawable.Height;
-				progress++;
-			}
+				int progress = 0;
+
+
+				Point upperCorner = new(_drawables[0].X, _drawables[1].Y);
+				Point lowerCorner = new(_drawables[0].X + _drawables[0].Width, _drawables[0].Y + _drawables[0].Height);
+
+				foreach (var drawable in _drawables[1..])
+				{
+					progressForm.UpdateProgress(progress, "Výpočet velikosti");
+					if (drawable.X < upperCorner.X)
+						upperCorner.X = drawable.X;
+					if (drawable.Y < upperCorner.Y)
+						upperCorner.Y = drawable.Y;
+
+					if (drawable.X + drawable.Width > lowerCorner.X)
+						lowerCorner.X = drawable.X + drawable.Width;
+					if (drawable.Y + drawable.Height > lowerCorner.Y)
+						lowerCorner.Y = drawable.Y + drawable.Height;
+					progress++;
+				}
 				progressForm.UpdateProgress(progress, "Vytváření bitmapy");
-			int pad = 50;
+				int pad = 50;
 
-			Bitmap bitmap = new Bitmap(lowerCorner.X-upperCorner.X + pad,lowerCorner.Y-upperCorner.Y+pad );
+				Bitmap bitmap = new Bitmap(lowerCorner.X - upperCorner.X + pad, lowerCorner.Y - upperCorner.Y + pad);
 
-		
-			DrawArgs a = new(bitmap.Width, bitmap.Height, -upperCorner.X+pad/2, -upperCorner.Y+pad/2, 1);
 
-			Graphics g = Graphics.FromImage(bitmap);
-			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+				DrawArgs a = new(bitmap.Width, bitmap.Height, -upperCorner.X + pad / 2, -upperCorner.Y + pad / 2, 1);
 
-			g.FillRectangle(Brushes.DarkGray, new(0, 0, bitmap.Width, bitmap.Height));
-			foreach (var drawable in _drawables)
-			{
-				drawable.Draw(a,g);
-				progress++;
-				progressForm.UpdateProgress(progress,"Vykreslování");
-			}
-			g.Save();
-			bitmap.Save("out.png");
+				Graphics g = Graphics.FromImage(bitmap);
+				g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+				g.FillRectangle(Brushes.DarkGray, new(0, 0, bitmap.Width, bitmap.Height));
+				foreach (var drawable in _drawables)
+				{
+					progressForm.UpdateProgress(progress, "Vykreslování");
+					drawable.Draw(a, g);
+					progress++;
+				}
+				g.Save();
+				bitmap.Save("out.png");
 				progressForm.Finished();
 
 			}).Start();
