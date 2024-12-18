@@ -13,9 +13,13 @@ namespace UMLDiagframApp.Presentation
         public int X { get; set; }
         public int Y { get; set; }
 
+        public int Width { get;}
+        public int Height { get;}
+
         public bool Destroyed {  get;  }
         public void Draw(DrawArgs args, Graphics g);
 
         public void Destroy();
+
     }
 }

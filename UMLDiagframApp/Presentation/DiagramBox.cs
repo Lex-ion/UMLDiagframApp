@@ -45,21 +45,21 @@ namespace UMLDiagframApp.Presentation
 
 				g.ResetTransform();
 				g.ScaleTransform(args.ViewportScale, args.ViewportScale);
-				width = (int)Math.Ceiling(g.MeasureString(Name + new string('x', 5), m).Width);
+				Width = (int)Math.Ceiling(g.MeasureString(Name + new string('x', 5), m).Width);
 
 				foreach (var method in Methods)
 				{
 					int newWidth = (int)Math.Ceiling(g.MeasureString(method.ToString() + new string('x', 5), m).Width);
-					width = newWidth > width ? newWidth : width;
+					Width = newWidth > Width ? newWidth : Width;
 				}
 
 				foreach (var attribute in Attributes)
 				{
 					int newWidth = (int)Math.Ceiling(g.MeasureString(attribute.ToString() + new string('x', 5), m).Width);
-					width = newWidth > width ? newWidth : width;
+					Width = newWidth > Width ? newWidth : Width;
 				}
 
-				height =(int)( (Attributes.Count+Methods.Count+1)*30+30);
+				Height =(int)( (Attributes.Count+Methods.Count+1)*30+30);
 
 				g.ScaleTransform(1, 1);
 				g.ResetTransform();
@@ -71,20 +71,20 @@ namespace UMLDiagframApp.Presentation
 			Color c = Color.FromArgb(64, 0, 0, 0);
 
 			g.FillRectangle(new SolidBrush(c), new((int)((X + 5 + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + 9 + args.ViewportOffsetY) * args.ViewportScale)
-				, (int)(width * args.ViewportScale), (int)(height * args.ViewportScale)));
+				, (int)(Width * args.ViewportScale), (int)(Height * args.ViewportScale)));
 
 			g.FillRectangle(isSelected ? Brushes.CadetBlue : Brushes.Aqua, new((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + args.ViewportOffsetY) * args.ViewportScale)
-				, (int)(width * args.ViewportScale), (int)(height * args.ViewportScale)));
+				, (int)(Width * args.ViewportScale), (int)(Height * args.ViewportScale)));
 
 			g.FillRectangle(Brushes.DarkCyan, new((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + args.ViewportOffsetY) * args.ViewportScale)
-				, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)));
+				, (int)(Width * args.ViewportScale), (int)(30 * args.ViewportScale)));
 
 			g.DrawRectangle(Pens.DarkBlue, new((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + args.ViewportOffsetY) * args.ViewportScale)
-			, (int)(width * args.ViewportScale), (int)(height * args.ViewportScale)));
+			, (int)(Width * args.ViewportScale), (int)(Height * args.ViewportScale)));
 
 
 			g.DrawString(Name, f, Brushes.Black, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + args.ViewportOffsetY) * args.ViewportScale)
-				, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+				, (int)(Width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
 
 			//	g.DrawString("X:" + X, f, Brushes.Black, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + 30 + args.ViewportOffsetY) * args.ViewportScale)
 			//		, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
@@ -95,7 +95,7 @@ namespace UMLDiagframApp.Presentation
 			if (SelectedIndex > -1&&isSelected&&SelectedIndex!=Attributes.Count)
 			{
 				g.FillRectangle(Brushes.DarkSlateBlue, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + 30+30*SelectedIndex + args.ViewportOffsetY) * args.ViewportScale)
-					, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)));
+					, (int)(Width * args.ViewportScale), (int)(30 * args.ViewportScale)));
 			}
 
 			int i = 0;
@@ -104,18 +104,18 @@ namespace UMLDiagframApp.Presentation
 			foreach (var a in Attributes)
 			{
 				g.DrawString(a.ToString(), f, Brushes.Black, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + 30 + i * 30 + args.ViewportOffsetY) * args.ViewportScale)
-		, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center });
+		, (int)(Width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center });
 				i++;
 			}
 
 			int x = (int)((X +1+ args.ViewportOffsetX) * args.ViewportScale);
 			int y = (int)((Y + 30 + i * 30+15 + args.ViewportOffsetY) * args.ViewportScale);
-			g.DrawLine(Pens.DarkViolet, new(x, y), new((int)((X -1+ width + args.ViewportOffsetX) * args.ViewportScale), y));
+			g.DrawLine(Pens.DarkViolet, new(x, y), new((int)((X -1+ Width + args.ViewportOffsetX) * args.ViewportScale), y));
 
 			foreach (var method in Methods)
 			{
 				g.DrawString(method.ToString(), f, Brushes.Black, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y +30+ 30 + i * 30 + args.ViewportOffsetY) * args.ViewportScale)
-			, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center });
+			, (int)(Width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center });
 				i++;
 			}
 
@@ -127,7 +127,7 @@ namespace UMLDiagframApp.Presentation
 
 			Cursor.Current = Cursors.Default;
 			(int, int) p = (X, Y) + dArgs;
-			(int, int) d = (X + width, Y + 30) + dArgs;
+			(int, int) d = (X + Width, Y + 30) + dArgs;
 
 			if (mArgs.PositionX >= p.Item1 && mArgs.PositionX <= d.Item1 &&
 				mArgs.PositionY >= p.Item2 && mArgs.PositionY <= d.Item2

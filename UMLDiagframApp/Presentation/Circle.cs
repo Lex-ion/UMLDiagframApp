@@ -19,6 +19,10 @@ namespace UMLDiagframApp.Presentation
 
 		public bool Destroyed { get; private set; }
 
+		public int Width => 15;
+
+		public int Height => 15;
+
 		private int _y;
 
         public Circle(int x, int y)

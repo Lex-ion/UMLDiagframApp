@@ -13,10 +13,10 @@ namespace UMLDiagframApp.Presentation
         public virtual int Y { get => _y; set => _y = value; }
 		public bool Destroyed { get; private set; }
 
-		protected int width;
-        protected int height;
+		public int Width { get; protected set; }
+        public int Height { get; protected set; }
 
-        protected bool isSelected;
+		protected bool isSelected;
 
         private int _x;
         private int _y;
@@ -25,19 +25,18 @@ namespace UMLDiagframApp.Presentation
         {
             X = x;
             Y = y;
-            this.width = width;
-            this.height = height;
+            this.Width = width;
+            this.Height = height;
         }
 
         public abstract void Draw(DrawArgs args, Graphics g);
 
         public virtual bool IsSelected(int x, int y, DrawArgs args)
-        {
-            
+        {           
 
             isSelected =
-                x >= (X + args.ViewportOffsetX) * args.ViewportScale && x <= (X + width + args.ViewportOffsetX) * args.ViewportScale &&
-                y >= (Y + args.ViewportOffsetY) * args.ViewportScale && y <= (Y + height + args.ViewportOffsetY) * args.ViewportScale;
+                x >= (X + args.ViewportOffsetX) * args.ViewportScale && x <= (X + Width + args.ViewportOffsetX) * args.ViewportScale &&
+                y >= (Y + args.ViewportOffsetY) * args.ViewportScale && y <= (Y + Height + args.ViewportOffsetY) * args.ViewportScale;
             return isSelected;
         }
 

@@ -23,20 +23,20 @@ namespace UMLDiagframApp.Presentation
 
 			itemHeight = TextRenderer.MeasureText("0", _font).Height;
 
-			height = itemHeight*commands.Count;
+			Height = itemHeight*commands.Count;
 
 			foreach (ContextMenuCommand command in _commands)
 			{
 				int w =	TextRenderer.MeasureText(command.Name,_font).Width;
-				if (w > base.width) {
-				base.width = w;
+				if (w > base.Width) {
+				base.Width = w;
 				}
 			}
 		}
 
 		public override void Draw(DrawArgs args, Graphics g)
 		{
-			Rectangle r = new Rectangle(X+args.ViewportOffsetX,Y+args.ViewportOffsetY,width,height);
+			Rectangle r = new Rectangle(X+args.ViewportOffsetX,Y+args.ViewportOffsetY,Width,Height);
 			g.FillRectangle(Brushes.LightCyan, r);
 			g.DrawRectangle(Pens.DarkSlateBlue, r);
 
@@ -46,7 +46,7 @@ namespace UMLDiagframApp.Presentation
 			{
 				if (i == selectedIndex)
 				{
-					g.FillRectangle(Brushes.WhiteSmoke, new(X+args.ViewportOffsetX, Y + args.ViewportOffsetY + i * itemHeight,width,itemHeight));
+					g.FillRectangle(Brushes.WhiteSmoke, new(X+args.ViewportOffsetX, Y + args.ViewportOffsetY + i * itemHeight,Width,itemHeight));
 				}
 
 				g.DrawString(c.Name, _font, Brushes.Black, new PointF(X + args.ViewportOffsetX, Y + args.ViewportOffsetY+i*itemHeight));
@@ -72,8 +72,8 @@ namespace UMLDiagframApp.Presentation
 
 		public override bool IsSelected(int x, int y, DrawArgs args)
 		{
-			 isSelected= x >= (X + args.ViewportOffsetX)&& x <= (X + width + args.ViewportOffsetX) &&
-				y >= (Y + args.ViewportOffsetY)  && y <= (Y + height + args.ViewportOffsetY) ;
+			 isSelected= x >= (X + args.ViewportOffsetX)&& x <= (X + Width + args.ViewportOffsetX) &&
+				y >= (Y + args.ViewportOffsetY)  && y <= (Y + Height + args.ViewportOffsetY) ;
 
 			if (!isSelected)
 			{
