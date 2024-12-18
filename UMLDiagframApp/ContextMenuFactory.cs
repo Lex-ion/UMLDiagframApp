@@ -43,7 +43,16 @@ namespace UMLDiagframApp
 			baseCommands.ToList().ForEach(c => cmds.Add(c));
 
 			if (selected is DiagramBox)
+			{
 				boxCommands.ToList().ForEach(cmds.Add);
+				DiagramBox box = (DiagramBox)selected;
+				if (box.SelectedIndex > -1 && box.SelectedIndex != box.Attributes.Count)
+				{
+
+					cmds.Add(new("Upravit výběr", box.UpdateItem));
+					cmds.Add(new("Odebrat vyběr", box.RemoveItem));
+				}
+			}
 
 			return new ContextMenu(x, y, cmds);
 		}

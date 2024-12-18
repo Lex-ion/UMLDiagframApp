@@ -1,4 +1,6 @@
-﻿using UMLDiagframApp.Entities;
+﻿using System;
+using UMLDiagframApp.Entities;
+using UMLDiagframApp.ValidationStrategies;
 
 namespace UMLDiagframApp.Presentation
 {
@@ -12,6 +14,8 @@ namespace UMLDiagframApp.Presentation
 		private int _oldX;
 		private int _oldY;
 		bool focused;
+
+		public int SelectedIndex { get; private set; } = -1;
 
 		float lastScale;
 
@@ -55,7 +59,7 @@ namespace UMLDiagframApp.Presentation
 					width = newWidth > width ? newWidth : width;
 				}
 
-				height =(int)( (Attributes.Count+Methods.Count+1)*30+20);
+				height =(int)( (Attributes.Count+Methods.Count+1)*30+30);
 
 				g.ScaleTransform(1, 1);
 				g.ResetTransform();
@@ -86,6 +90,14 @@ namespace UMLDiagframApp.Presentation
 			//		, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
 			//	g.DrawString("Y:" + Y, f, Brushes.Black, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + 60 + args.ViewportOffsetY) * args.ViewportScale)
 			//		, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+			
+			
+			if (SelectedIndex > -1&&isSelected&&SelectedIndex!=Attributes.Count)
+			{
+				g.FillRectangle(Brushes.DarkSlateBlue, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y + 30+30*SelectedIndex + args.ViewportOffsetY) * args.ViewportScale)
+					, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)));
+			}
+
 			int i = 0;
 
 
@@ -95,13 +107,14 @@ namespace UMLDiagframApp.Presentation
 		, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center });
 				i++;
 			}
+
 			int x = (int)((X +1+ args.ViewportOffsetX) * args.ViewportScale);
-			int y = (int)((Y + 30 + i * 30+10 + args.ViewportOffsetY) * args.ViewportScale);
+			int y = (int)((Y + 30 + i * 30+15 + args.ViewportOffsetY) * args.ViewportScale);
 			g.DrawLine(Pens.DarkViolet, new(x, y), new((int)((X -1+ width + args.ViewportOffsetX) * args.ViewportScale), y));
 
 			foreach (var method in Methods)
 			{
-				g.DrawString(method.ToString(), f, Brushes.Black, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y +20+ 30 + i * 30 + args.ViewportOffsetY) * args.ViewportScale)
+				g.DrawString(method.ToString(), f, Brushes.Black, new RectangleF((int)((X + args.ViewportOffsetX) * args.ViewportScale), (int)((Y +30+ 30 + i * 30 + args.ViewportOffsetY) * args.ViewportScale)
 			, (int)(width * args.ViewportScale), (int)(30 * args.ViewportScale)), new StringFormat() { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center });
 				i++;
 			}
@@ -151,6 +164,72 @@ namespace UMLDiagframApp.Presentation
 
 			}
 
+
+			if(isSelected)
+			{
+				int mouseY = mArgs.PositionY-p.Item2;
+				if (mouseY >= 30*dArgs.ViewportScale)
+				{
+					SelectedIndex =(int)( (mouseY - 30*dArgs.ViewportScale) /( 30*dArgs.ViewportScale));
+				}
+				else
+					SelectedIndex = -1;
+				if (SelectedIndex >= Methods.Count + Attributes.Count + 1)
+					SelectedIndex = -1;
+			}
+
+		}
+
+		public void UpdateItem()
+		{
+			if (SelectedIndex == -1||SelectedIndex==Attributes.Count)
+				return;
+			bool isAttribute=SelectedIndex<Attributes.Count;
+
+			IValidationStrategy strategy = isAttribute ? new AttributeValidationStrategy() : new MethodValidationStrategy();
+			if(isAttribute)
+			{
+				Entities.Attribute attribute = Attributes[SelectedIndex];
+				TextInputForm t = new TextInputForm(attribute.ToString()!, strategy);
+				t.ShowDialog();
+				if (t.DialogResult == DialogResult.Abort)
+					return;
+				Attributes[SelectedIndex] =Entities. Attribute.CreateFromString(t.Value);
+
+			}
+			else
+			{
+				int i = SelectedIndex - Attributes.Count-1;
+				Method method = Methods[i];
+
+				TextInputForm t = new TextInputForm(method.ToString()!, strategy);
+				t.ShowDialog();
+				if (t.DialogResult == DialogResult.Abort)
+					return;
+				Methods[i]=Method.CreateFromString(t.Value);
+			}
+			Changed = true;
+		}
+
+		public void RemoveItem()
+		{
+			if (SelectedIndex == -1 || SelectedIndex == Attributes.Count)
+				return;
+
+			if (SelectedIndex < Attributes.Count)
+			{
+				Attributes.RemoveAt(SelectedIndex);
+
+			}
+			else
+			{
+				int i = SelectedIndex - Attributes.Count - 1;
+				Methods.RemoveAt(i); ;
+			}
+
+			Changed = true;
+
+			SelectedIndex = -1;
 		}
 
 

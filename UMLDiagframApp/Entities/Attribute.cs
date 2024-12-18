@@ -54,5 +54,52 @@ namespace UMLDiagframApp.Entities
 			m = m.Replace(" ", "");
 			return m;
 		}
+
+		public static Attribute CreateFromString(string value)
+		{
+			ModifiersEnum modifiers;
+			string t = value;
+			string s;
+			s = t[1..];
+			switch (t[0])
+			{
+				case '+':
+					modifiers = ModifiersEnum.Public;
+
+					break;
+
+				case '#':
+					modifiers = ModifiersEnum.Protected; break;
+
+				case '~':
+					modifiers = ModifiersEnum.Internal; break;
+
+				case '-':
+					modifiers = ModifiersEnum.Private; break;
+				default:
+					s = t.Split(' ').Last();
+					switch (t.Split(' ').First().ToLower())
+					{
+						default:
+							modifiers = ModifiersEnum.Public; break;
+
+						case "public":
+							modifiers = ModifiersEnum.Public; break;
+						case "private":
+							modifiers = ModifiersEnum.Private; break;
+						case "protected":
+							modifiers = ModifiersEnum.Protected; break;
+						case "internal":
+							modifiers = ModifiersEnum.Internal; break;
+					}
+					break;
+			}
+
+			string name = s.Split(":").First();
+			string type = s.Split(":").Last();
+
+			return new Entities.Attribute(modifiers, type, name);
+
+		}
 	}
 }
