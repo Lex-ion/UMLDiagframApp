@@ -23,11 +23,18 @@ namespace UMLDiagframApp
 
 		public void UpdateProgress(int value, string text)
 		{
-			
+			UpdateBar(value);
+			UpdateLabel(text);
+		
+		}
+
+
+		private void UpdateBar(int value)
+		{
 
 			if (progressBar1.InvokeRequired)
 			{
-				Action u = delegate { UpdateProgress(value,text); };
+				Action u = delegate { UpdateBar(value); };
 				progressBar1.Invoke(u);
 			}
 			else
@@ -36,10 +43,24 @@ namespace UMLDiagframApp
 				{
 
 					Close();
-				return;
+					return;
 				}
-				progressBar1.Value=value;
-				label1.Text=text;
+				progressBar1.Value = value;
+			}
+		}
+
+		private void UpdateLabel(string text)
+		{
+
+			if (label1.InvokeRequired)
+			{
+				Action u = delegate { UpdateLabel( text); };
+				label1.Invoke(u);
+			}
+			else
+			{
+				
+				label1.Text = text;
 			}
 		}
 
