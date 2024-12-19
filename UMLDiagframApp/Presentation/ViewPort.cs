@@ -27,9 +27,9 @@ namespace UMLDiagframApp.Presentation
 			_args = new(width, height, 0, 0, 1);
 			_drawables = new List<IDrawable>();
 			_selectables = new List<ISelectable>();
-			for (int i = 0; i < 150; i++)
+			for (int i = 0; i < 15; i++)
 			{
-				for (int j = 0; j < 150; j++)
+				for (int j = 0; j < 15; j++)
 				{
 					_drawables.Add(new Circle(15 + i * 15, 15 + j * 15));
 				}
@@ -266,12 +266,12 @@ namespace UMLDiagframApp.Presentation
 				progressForm.UpdateProgress(progress, "Vytváření bitmapy");
 				int pad = 50;
 
-				Bitmap bitmap = new Bitmap(lowerCorner.X - upperCorner.X + pad, lowerCorner.Y - upperCorner.Y + pad);
+				using Bitmap bitmap = new Bitmap(lowerCorner.X - upperCorner.X + pad, lowerCorner.Y - upperCorner.Y + pad);
 
 
 				DrawArgs a = new(bitmap.Width, bitmap.Height, -upperCorner.X + pad / 2, -upperCorner.Y + pad / 2, 1);
 
-				Graphics g = Graphics.FromImage(bitmap);
+				using Graphics g = Graphics.FromImage(bitmap);
 				g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
 				g.FillRectangle(Brushes.DarkGray, new(0, 0, bitmap.Width, bitmap.Height));
@@ -282,7 +282,9 @@ namespace UMLDiagframApp.Presentation
 					progress++;
 				}
 				g.Save();
-				bitmap.Save("out.png");
+				bitmap.Save("out.png",System.Drawing.Imaging.ImageFormat.Png);
+				g.Dispose();
+				bitmap.Dispose();
 				progressForm.Finished();
 
 			}).Start();

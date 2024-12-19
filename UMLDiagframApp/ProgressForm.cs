@@ -23,8 +23,15 @@ namespace UMLDiagframApp
 
 		public void UpdateProgress(int value, string text)
 		{
-			UpdateBar(value);
-			UpdateLabel(text);
+			try
+			{
+				UpdateBar(value);
+				UpdateLabel(text);
+			}
+			catch (Exception)
+			{
+
+			}
 		
 		}
 

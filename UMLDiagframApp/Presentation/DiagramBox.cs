@@ -194,6 +194,7 @@ namespace UMLDiagframApp.Presentation
 				t.ShowDialog();
 				if (t.DialogResult == DialogResult.Abort)
 					return;
+
 				Attributes[SelectedIndex] =Entities. Attribute.CreateFromString(t.Value);
 
 			}
