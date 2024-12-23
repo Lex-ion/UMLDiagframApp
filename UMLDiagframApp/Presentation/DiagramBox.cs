@@ -22,6 +22,9 @@ namespace UMLDiagframApp.Presentation
 		public List<Entities.Attribute> Attributes { get; }
 		public List<Entities.Method> Methods { get; }
 
+		public int CenterX => (int)((X + X + Width) / 2);
+		public int CenterY => (int)((Y+Y+Height) / 2);
+
 
 		public DiagramBox(string name, int x, int y, int width, int height) : base(x, y, width, height)
 		{

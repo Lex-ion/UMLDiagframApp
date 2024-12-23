@@ -230,8 +230,15 @@ namespace UMLDiagframApp
 				return;
 			string b = t.Value;
 
+			var con = new ConnectionLine(box, boxes.First(bs => bs.Name == b));
 
-			_drawables.Add(new ConnectionLine(box,boxes.First(bs=>bs.Name == b)));
+			if(_selectables.Where(s=>s is ConnectionLine).Select(s=>s as  ConnectionLine).Any(s=>s.DiagramBoxPair==con.DiagramBoxPair))
+			{
+				return;
+			}
+
+			_drawables.Add(con);
+			_selectables.Add(con);
 		}
 
 	}

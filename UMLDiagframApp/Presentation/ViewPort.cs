@@ -115,11 +115,16 @@ namespace UMLDiagframApp.Presentation
 					{
 						_selected = s;
 
+						if(s is not ConnectionLine)
+						{
+
+
 						_selectables.Remove(s);
 						_selectables.Add(s);
 
 						_drawables.Remove(s);
 						_drawables.Add(s);
+						}
 
 
 						break;

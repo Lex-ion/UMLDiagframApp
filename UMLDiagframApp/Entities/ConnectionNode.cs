@@ -8,5 +8,13 @@ namespace UMLDiagframApp.Entities
 {
 	public class ConnectionNode
 	{
+		public int X;
+		public int Y;
+
+		public ConnectionNode(int x, int y)
+		{
+			X = x;
+			Y = y;
+		}
 	}
 }
