@@ -36,6 +36,8 @@ namespace UMLDiagframApp
 				new("Přejmenovat",()=>Rename(selected as DiagramBox)),
 				new("Přidat atribut",()=>AddAttribute(selected as DiagramBox)),
 				new("Přidat metodu",()=>AddMethod(selected as DiagramBox)),
+				new("Vytvořit propojení",()=>CreateConnection(selected as DiagramBox,_selectables.Where(s=> s is DiagramBox).Select(d=>d as DiagramBox).ToList<DiagramBox>())),
+
 			];
 
 			List<ContextMenuCommand> cmds = new();
@@ -218,6 +220,18 @@ namespace UMLDiagframApp
 
 			box.Attributes.Add(new Entities.Attribute(modifiers,type,name));
 			box.Changed=true;
+		}
+
+		private void CreateConnection(DiagramBox box, List<DiagramBox> boxes)
+		{
+			TextInputForm t = new TextInputForm("", new NoneValidationStrategy());
+			t.ShowDialog();
+			if (t.DialogResult == DialogResult.Abort)
+				return;
+			string b = t.Value;
+
+
+			_drawables.Add(new ConnectionLine(box,boxes.First(bs=>bs.Name == b)));
 		}
 
 	}
