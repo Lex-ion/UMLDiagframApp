@@ -7,7 +7,7 @@ namespace UMLDiagframApp.Presentation
 	{
 		public DiagramBoxPair DiagramBoxPair { get; set; }
 
-		List<ConnectionNode> _nodes;
+		ConnectionNodeList _nodes;
 
 		public ConnectionNode? SelectedNode { get; private set; } 
 
@@ -16,8 +16,10 @@ namespace UMLDiagframApp.Presentation
 		public ConnectionLine(DiagramBox firstBox, DiagramBox secondBox) : base(0, 0, 50, 50)
 		{
 			DiagramBoxPair = new DiagramBoxPair(firstBox, secondBox);
-			_nodes = new List<ConnectionNode>() {};
 
+			_nodes = new ConnectionNodeList();
+			_nodes.Add(new(0, 0));
+			_nodes.Add(new(100, 100));
 		}
 
 		public override void Draw(DrawArgs args, Graphics g)
@@ -32,7 +34,9 @@ namespace UMLDiagframApp.Presentation
 			}
 			else
 			{
-				(int, int) cords = (_nodes[0].X, _nodes[0].Y) + args;
+				(int, int) cords = (_nodes.First!.X, _nodes.First!.Y) + args;
+
+				ConnectionNode? selectedNode = _nodes.First!;
 
 				g.DrawLine(Pens.Azure, new(firstCords.Item1, firstCords.Item2), new(cords.Item1, cords.Item2));
 
@@ -44,7 +48,8 @@ namespace UMLDiagframApp.Presentation
 						break;
 					}
 
-					(int, int) nextCords = (_nodes[i + 1].X, _nodes[i + 1].Y) + args;
+					(int, int) nextCords = (selectedNode.After!.X, selectedNode.After!.Y) + args;
+					selectedNode=selectedNode.After;
 
 					g.DrawLine(Pens.Azure, new(cords.Item1, cords.Item2), new(nextCords.Item1, nextCords.Item2));
 					cords = nextCords;
@@ -86,7 +91,8 @@ namespace UMLDiagframApp.Presentation
 			{
 
 
-				(int, int) cords = (_nodes[0].X, _nodes[0].Y) + args;
+				(int, int) cords = (_nodes.First!.X, _nodes.First!.Y) + args;
+				var selectedNode = _nodes.First!;
 
 				if (SegmentSelcted(firstCords, cords))
 					return true;
@@ -98,7 +104,9 @@ namespace UMLDiagframApp.Presentation
 						return SegmentSelcted(cords, lastCords);
 					}
 
-					(int, int) nextCords = (_nodes[i + 1].X, _nodes[i + 1].Y) + args;
+					(int, int) nextCords = (selectedNode.After!.X, selectedNode.After!.Y) + args;
+					selectedNode= selectedNode.After;
+
 					if (SegmentSelcted(cords, nextCords))
 						return true;
 

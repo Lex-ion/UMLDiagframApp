@@ -12,11 +12,12 @@ namespace UMLDiagframApp
 
 		public Form1()
 		{
+
+			_vp = new ViewPort(100,100);
+
 			InitializeComponent();
+			
 
-
-
-			_vp = new ViewPort(pictureBox1.Width, pictureBox1.Height);
 		}
 
 		private void pictureBox1_Paint(object sender, PaintEventArgs e)
