@@ -11,6 +11,9 @@ namespace UMLDiagframApp.Presentation
 
 		public ConnectionNode? SelectedNode { get; private set; } 
 
+		private ConnectionLineSegment? _selectedSegment;
+		private ConnectionNode? _selectedNode;
+
 		double dist;
 
 		public ConnectionLine(DiagramBox firstBox, DiagramBox secondBox) : base(0, 0, 50, 50)
@@ -19,7 +22,12 @@ namespace UMLDiagframApp.Presentation
 
 			_nodes = new ConnectionNodeList();
 			_nodes.Add(new(0, 0));
-			_nodes.Add(new(100, 100));
+			_nodes.Add(new(100, 120));
+			_nodes.Add(new(100, 140));
+			_nodes.Add(new(100, 160));
+			_nodes.Add(new(100, 180));
+			_nodes.Add(new(100, 200));
+			_nodes.Add(new(-200, -300));
 		}
 
 		public override void Draw(DrawArgs args, Graphics g)
@@ -45,13 +53,29 @@ namespace UMLDiagframApp.Presentation
 					if (i + 1 >= _nodes.Count)
 					{
 						g.DrawLine(Pens.Azure, new(cords.Item1, cords.Item2), new(lastCords.Item1, lastCords.Item2));
+
+						if (isSelected)
+						{
+							if (selectedNode == _selectedNode)
+								g.FillEllipse(Brushes.LightGoldenrodYellow, new RectangleF(cords.Item1 - 5, cords.Item2 - 5, 10, 10));
+							else
+							g.DrawEllipse(Pens.LightGoldenrodYellow, new RectangleF(cords.Item1 - 5, cords.Item2 - 5, 10, 10));
+						}
+
 						break;
 					}
 
 					(int, int) nextCords = (selectedNode.After!.X, selectedNode.After!.Y) + args;
-					selectedNode=selectedNode.After;
 
 					g.DrawLine(Pens.Azure, new(cords.Item1, cords.Item2), new(nextCords.Item1, nextCords.Item2));
+					if (isSelected)
+					{
+						if (selectedNode == _selectedNode)
+							g.FillEllipse(Brushes.LightGoldenrodYellow, new RectangleF(cords.Item1 - 5, cords.Item2 - 5, 10, 10));
+						else
+							g.DrawEllipse(Pens.LightGoldenrodYellow, new RectangleF(cords.Item1 - 5, cords.Item2 - 5, 10, 10));
+					}
+					selectedNode=selectedNode.After;
 					cords = nextCords;
 
 				}
@@ -75,41 +99,60 @@ namespace UMLDiagframApp.Presentation
 			Vector2 vF = new(firstCords.Item1, firstCords.Item2);
 			Vector2 vS = new(lastCords.Item1,lastCords.Item2);
 
-
+			_selectedSegment = null;
+			_selectedNode = null;
 
 			if (_nodes.Count <= 0)
-			{
-
-
-				
+			{			
 
 				return SegmentSelcted(firstCords,lastCords);
-
-
 			}
 			else
 			{
-
-
 				(int, int) cords = (_nodes.First!.X, _nodes.First!.Y) + args;
 				var selectedNode = _nodes.First!;
 
-				if (SegmentSelcted(firstCords, cords))
+				Vector2  v2 = new(x,y);
+				Vector2 v1 = new(cords.Item1, cords.Item2);
+				if (Vector2.Distance(v1,v2)<=12)
+				{
+					_selectedNode = selectedNode;
+					isSelected = true;
 					return true;
+				}
+
+
+				if (SegmentSelcted(firstCords, cords))
+				{
+					return true;
+				}
 
 				for (int i = 0; i < _nodes.Count; i++)
 				{
+					v1 = new(cords.Item1, cords.Item2);
+					if (Vector2.Distance(v1, v2) <= 12)
+					{
+						isSelected = true;
+						_selectedNode = selectedNode;
+						return true;
+					}
 					if (i + 1 >= _nodes.Count)
 					{
-						return SegmentSelcted(cords, lastCords);
+						bool b= SegmentSelcted(cords, lastCords);
+						if (b)
+							_selectedSegment = new(selectedNode, null);
+						return b;
 					}
 
 					(int, int) nextCords = (selectedNode.After!.X, selectedNode.After!.Y) + args;
-					selectedNode= selectedNode.After;
 
 					if (SegmentSelcted(cords, nextCords))
+					{
+						_selectedSegment = new(selectedNode, selectedNode.After);
 						return true;
+					}
 
+					selectedNode= selectedNode.After;
 					cords = nextCords;
 
 				}
@@ -148,11 +191,10 @@ namespace UMLDiagframApp.Presentation
 
 				dist = numerator / denominator;
 
-				return numerator / denominator < 15;
+
+				isSelected = numerator / denominator < 15;
+				return isSelected;
 			}
-		}
-
-
-		
+		}		
 	}
 }
