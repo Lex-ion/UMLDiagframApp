@@ -86,12 +86,30 @@ namespace UMLDiagframApp.Presentation
 		public override void MouseInput(MouseArgs mArgs, DrawArgs dArgs)
 		{
 			Cursor.Current = Cursors.Hand;
+
+			if (_selectedNode is not null && mArgs.ButtonState == MouseButtonsStates.LeftHold) {
+				_selectedNode.X += mArgs.PositionXDelta;
+				_selectedNode.Y += mArgs.PositionYDelta;
+			
+			}
+			else if(_selectedNode is not null && mArgs.ButtonState == MouseButtonsStates.LeftUp)
+			{
+				Vector2 v = new(_selectedNode.X, _selectedNode.Y);
+				if(_selectedNode.After is not null)
+				if(Vector2.Distance(v,new(_selectedNode.After.X, _selectedNode.After.Y))<=20)
+					_nodes.RemoveAfter(_selectedNode);
+
+				if(_selectedNode.Before is not null)
+					if (Vector2.Distance(v,new(_selectedNode.Before.X,_selectedNode.Y))<=20)
+						_nodes.RemoveBefore(_selectedNode);
+			}
+
 			//	throw new NotImplementedException();
 		}
 
 		public override bool IsSelected(int x, int y, DrawArgs args)
 		{
-
+			isSelected = false;
 			(int, int) firstCords = (DiagramBoxPair.First.CenterX, DiagramBoxPair.First.CenterY) + args;
 			(int, int) lastCords = (DiagramBoxPair.Second.CenterX, DiagramBoxPair.Second.CenterY) + args;
 
@@ -101,7 +119,7 @@ namespace UMLDiagframApp.Presentation
 
 			_selectedSegment = null;
 			_selectedNode = null;
-
+		
 			if (_nodes.Count <= 0)
 			{			
 
