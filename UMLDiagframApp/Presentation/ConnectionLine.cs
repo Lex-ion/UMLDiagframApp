@@ -9,10 +9,17 @@ namespace UMLDiagframApp.Presentation
 
 		ConnectionNodeList _nodes;
 
-		public ConnectionNode? SelectedNode { get; private set; } 
+		public ConnectionNode? SelectedNode { get; private set; }
 
 		private ConnectionLineSegment? _selectedSegment;
 		private ConnectionNode? _selectedNode;
+
+
+
+		private int? _selectionX;
+		private int? _selectionY;
+		private int _oldX;
+		private int _oldY;
 
 		double dist;
 
@@ -59,7 +66,7 @@ namespace UMLDiagframApp.Presentation
 							if (selectedNode == _selectedNode)
 								g.FillEllipse(Brushes.LightGoldenrodYellow, new RectangleF(cords.Item1 - 5, cords.Item2 - 5, 10, 10));
 							else
-							g.DrawEllipse(Pens.LightGoldenrodYellow, new RectangleF(cords.Item1 - 5, cords.Item2 - 5, 10, 10));
+								g.DrawEllipse(Pens.LightGoldenrodYellow, new RectangleF(cords.Item1 - 5, cords.Item2 - 5, 10, 10));
 						}
 
 						break;
@@ -75,7 +82,7 @@ namespace UMLDiagframApp.Presentation
 						else
 							g.DrawEllipse(Pens.LightGoldenrodYellow, new RectangleF(cords.Item1 - 5, cords.Item2 - 5, 10, 10));
 					}
-					selectedNode=selectedNode.After;
+					selectedNode = selectedNode.After;
 					cords = nextCords;
 
 				}
@@ -87,21 +94,39 @@ namespace UMLDiagframApp.Presentation
 		{
 			Cursor.Current = Cursors.Hand;
 
-			if (_selectedNode is not null && mArgs.ButtonState == MouseButtonsStates.LeftHold) {
-				_selectedNode.X += mArgs.PositionXDelta;
-				_selectedNode.Y += mArgs.PositionYDelta;
-			
+			if (_selectedNode is not null && mArgs.ButtonState == MouseButtonsStates.LeftDown)
+			{
+				_selectionX = mArgs.PositionX;
+				_selectionY = mArgs.PositionY;
+
+				_oldX = _selectedNode.X; _oldY =_selectedNode. Y;
 			}
-			else if(_selectedNode is not null && mArgs.ButtonState == MouseButtonsStates.LeftUp)
+
+			if (_selectedNode is not null&&(mArgs.Button == MouseButtons.Left || mArgs.LeftMouseDown) && _selectionX is not null && _selectionY is not null)
+			{
+
+				int dX = X - dArgs.ViewportOffsetX;
+
+				_selectedNode.X = _oldX + (mArgs.PositionX - (int)_selectionX) / dArgs;
+				_selectedNode.Y = _oldY + (mArgs.PositionY - (int)_selectionY) / dArgs;
+
+			}
+
+
+
+			if (_selectedNode is not null && mArgs.ButtonState == MouseButtonsStates.LeftUp)
 			{
 				Vector2 v = new(_selectedNode.X, _selectedNode.Y);
-				if(_selectedNode.After is not null)
-				if(Vector2.Distance(v,new(_selectedNode.After.X, _selectedNode.After.Y))<=20)
-					_nodes.RemoveAfter(_selectedNode);
+				if (_selectedNode.After is not null)
+					if (Vector2.Distance(v, new(_selectedNode.After.X, _selectedNode.After.Y)) <= 20)
+						_nodes.RemoveAfter(_selectedNode);
 
-				if(_selectedNode.Before is not null)
-					if (Vector2.Distance(v,new(_selectedNode.Before.X,_selectedNode.Y))<=20)
+				if (_selectedNode.Before is not null)
+					if (Vector2.Distance(v, new(_selectedNode.Before.X, _selectedNode.Y)) <= 20)
 						_nodes.RemoveBefore(_selectedNode);
+
+				_selectionX = null;
+				_selectionY = null;
 			}
 
 			//	throw new NotImplementedException();
@@ -115,24 +140,24 @@ namespace UMLDiagframApp.Presentation
 
 
 			Vector2 vF = new(firstCords.Item1, firstCords.Item2);
-			Vector2 vS = new(lastCords.Item1,lastCords.Item2);
+			Vector2 vS = new(lastCords.Item1, lastCords.Item2);
 
 			_selectedSegment = null;
 			_selectedNode = null;
-		
-			if (_nodes.Count <= 0)
-			{			
 
-				return SegmentSelcted(firstCords,lastCords);
+			if (_nodes.Count <= 0)
+			{
+
+				return SegmentSelcted(firstCords, lastCords);
 			}
 			else
 			{
 				(int, int) cords = (_nodes.First!.X, _nodes.First!.Y) + args;
 				var selectedNode = _nodes.First!;
 
-				Vector2  v2 = new(x,y);
+				Vector2 v2 = new(x, y);
 				Vector2 v1 = new(cords.Item1, cords.Item2);
-				if (Vector2.Distance(v1,v2)<=12)
+				if (Vector2.Distance(v1, v2) <= 12)
 				{
 					_selectedNode = selectedNode;
 					isSelected = true;
@@ -156,7 +181,7 @@ namespace UMLDiagframApp.Presentation
 					}
 					if (i + 1 >= _nodes.Count)
 					{
-						bool b= SegmentSelcted(cords, lastCords);
+						bool b = SegmentSelcted(cords, lastCords);
 						if (b)
 							_selectedSegment = new(selectedNode, null);
 						return b;
@@ -170,18 +195,18 @@ namespace UMLDiagframApp.Presentation
 						return true;
 					}
 
-					selectedNode= selectedNode.After;
+					selectedNode = selectedNode.After;
 					cords = nextCords;
 
 				}
-				
+
 
 			}
 
 			return false;
 
 
-			bool SegmentSelcted((int, int) first, (int,int) second)
+			bool SegmentSelcted((int, int) first, (int, int) second)
 			{
 
 				Rectangle bounds = new Rectangle(
@@ -198,7 +223,7 @@ namespace UMLDiagframApp.Presentation
 				if (!bounds.Contains(x, y))
 					return false;
 
-				Vector2 vN = (new Vector2 (second.Item1,second.Item2) - new Vector2(first.Item1,first.Item2));
+				Vector2 vN = (new Vector2(second.Item1, second.Item2) - new Vector2(first.Item1, first.Item2));
 				vN = new Vector2(vN.Y, -vN.X);
 
 				double c = -(first.Item1 * vN.X + first.Item2 * vN.Y);
@@ -213,6 +238,6 @@ namespace UMLDiagframApp.Presentation
 				isSelected = numerator / denominator < 15;
 				return isSelected;
 			}
-		}		
+		}
 	}
 }
