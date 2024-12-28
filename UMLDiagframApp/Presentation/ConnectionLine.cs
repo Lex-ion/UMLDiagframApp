@@ -95,10 +95,10 @@ namespace UMLDiagframApp.Presentation
 			Cursor.Current = Cursors.Hand;
 
 
+				(int, int) cords = ((mArgs.PositionX/dArgs-dArgs.ViewportOffsetX), (mArgs.PositionY/dArgs-dArgs.ViewportOffsetY));
 
 			if (mArgs.ButtonState == MouseButtonsStates.LeftDown && _selectedNode is null && _selectedSegment is not null)
 			{
-				(int, int) cords = (mArgs.PositionX-dArgs.ViewportOffsetX, mArgs.PositionY-dArgs.ViewportOffsetY);
 				var newNode = new ConnectionNode(cords.Item1, cords.Item2);
 				_selectedNode = newNode;
 
@@ -119,7 +119,6 @@ namespace UMLDiagframApp.Presentation
 			else if (mArgs.ButtonState == MouseButtonsStates.LeftDown && _selectedNode is null)
 			{
 
-				(int, int) cords = (mArgs.PositionX - dArgs.ViewportOffsetX, mArgs.PositionY - dArgs.ViewportOffsetY);
 				var newNode = new ConnectionNode(cords.Item1, cords.Item2);
 				_selectedNode = newNode;
 				_nodes.Add(newNode);
