@@ -239,6 +239,14 @@ namespace UMLDiagframApp
 
 			_drawables.Add(con);
 			_selectables.Add(con);
+		
+			_drawables.Remove(box); _selectables.Remove(box);
+			_drawables.Add(box); _selectables.Add(box);
+
+			var box2 = _selectables.First(s => s is DiagramBox && ((DiagramBox)s).Name == b);
+
+			_drawables.Remove(box2); _selectables.Remove(box2);
+			_drawables.Add(box2); _selectables.Add(box2);
 		}
 
 	}

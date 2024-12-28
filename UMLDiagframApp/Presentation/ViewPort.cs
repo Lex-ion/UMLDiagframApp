@@ -115,19 +115,27 @@ namespace UMLDiagframApp.Presentation
 					{
 						_selected = s;
 
-						if(s is not ConnectionLine)
+						OnTop(s);
+						if (s is ConnectionLine)
 						{
+							var cl = s as ConnectionLine;
 
-
-						_selectables.Remove(s);
-						_selectables.Add(s);
-
-						_drawables.Remove(s);
-						_drawables.Add(s);
+							OnTop(cl.DiagramBoxPair.First);
+							OnTop(cl.DiagramBoxPair.Second);
+							 
 						}
 
 
 						break;
+
+						void OnTop(ISelectable selectable)
+						{
+							_selectables.Remove(selectable);
+							_selectables.Add(selectable);
+
+							_drawables.Remove(selectable);
+							_drawables.Add(selectable);
+						}
 					}
 
 					_selected = null;
