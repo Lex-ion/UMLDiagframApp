@@ -224,7 +224,7 @@ namespace UMLDiagframApp
 
 		private void CreateConnection(DiagramBox box, List<DiagramBox> boxes)
 		{
-			TextInputForm t = new TextInputForm("", new NoneValidationStrategy());
+			TextInputForm t = new TextInputForm("", new ConnectionValidationStrategy(box.Name,_selectables));
 			t.ShowDialog();
 			if (t.DialogResult == DialogResult.Abort)
 				return;
