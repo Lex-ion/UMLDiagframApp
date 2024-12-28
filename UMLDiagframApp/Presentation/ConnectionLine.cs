@@ -125,6 +125,12 @@ namespace UMLDiagframApp.Presentation
 					if (Vector2.Distance(v, new(_selectedNode.Before.X, _selectedNode.Y)) <= 20)
 						_nodes.RemoveBefore(_selectedNode);
 
+				if (new Rectangle(DiagramBoxPair.First.X, DiagramBoxPair.First.Y, DiagramBoxPair.First.Width, DiagramBoxPair.First.Height).Contains(_selectedNode.X, _selectedNode.Y))
+					_nodes.Remove(_selectedNode);
+
+				else if (new Rectangle(DiagramBoxPair.Second.X, DiagramBoxPair.Second.Y, DiagramBoxPair.Second.Width, DiagramBoxPair.Second.Height).Contains(_selectedNode.X, _selectedNode.Y))
+					_nodes.Remove(_selectedNode);
+
 				_selectionX = null;
 				_selectionY = null;
 			}
