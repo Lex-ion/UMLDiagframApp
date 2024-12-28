@@ -28,13 +28,13 @@ namespace UMLDiagframApp.Presentation
 			DiagramBoxPair = new DiagramBoxPair(firstBox, secondBox);
 
 			_nodes = new ConnectionNodeList();
-			_nodes.Add(new(0, 0));
+		/*	_nodes.Add(new(0, 0));
 			_nodes.Add(new(100, 120));
 			_nodes.Add(new(100, 140));
 			_nodes.Add(new(100, 160));
 			_nodes.Add(new(100, 180));
 			_nodes.Add(new(100, 200));
-			_nodes.Add(new(-200, -300));
+			_nodes.Add(new(-200, -300));*/
 		}
 
 		public override void Draw(DrawArgs args, Graphics g)
@@ -94,15 +94,46 @@ namespace UMLDiagframApp.Presentation
 		{
 			Cursor.Current = Cursors.Hand;
 
+
+
+			if (mArgs.ButtonState == MouseButtonsStates.LeftDown && _selectedNode is null && _selectedSegment is not null)
+			{
+				(int, int) cords = (mArgs.PositionX-dArgs.ViewportOffsetX, mArgs.PositionY-dArgs.ViewportOffsetY);
+				var newNode = new ConnectionNode(cords.Item1, cords.Item2);
+				_selectedNode = newNode;
+
+				if (_selectedSegment?.First is not null && _selectedSegment?.Last is not null)
+				{
+					_nodes.AddAfter(_selectedSegment?.First, newNode);
+				}
+				else if (_selectedSegment?.First is null && _selectedSegment?.Last is not null)
+				{
+					_nodes.AddBefore(_selectedSegment?.Last,newNode);
+				}
+				else if(_selectedSegment?.First is not null && _selectedSegment?.Last is null)
+				{
+					_nodes.AddAfter(_selectedSegment?.First, newNode);
+				}
+
+			}
+			else if (mArgs.ButtonState == MouseButtonsStates.LeftDown && _selectedNode is null)
+			{
+
+				(int, int) cords = (mArgs.PositionX - dArgs.ViewportOffsetX, mArgs.PositionY - dArgs.ViewportOffsetY);
+				var newNode = new ConnectionNode(cords.Item1, cords.Item2);
+				_selectedNode = newNode;
+				_nodes.Add(newNode);
+			}
+
 			if (_selectedNode is not null && mArgs.ButtonState == MouseButtonsStates.LeftDown)
 			{
 				_selectionX = mArgs.PositionX;
 				_selectionY = mArgs.PositionY;
 
-				_oldX = _selectedNode.X; _oldY =_selectedNode. Y;
+				_oldX = _selectedNode.X; _oldY = _selectedNode.Y;
 			}
 
-			if (_selectedNode is not null&&(mArgs.Button == MouseButtons.Left || mArgs.LeftMouseDown) && _selectionX is not null && _selectionY is not null)
+			if (_selectedNode is not null && (mArgs.Button == MouseButtons.Left || mArgs.LeftMouseDown) && _selectionX is not null && _selectionY is not null)
 			{
 
 				int dX = X - dArgs.ViewportOffsetX;
@@ -122,7 +153,7 @@ namespace UMLDiagframApp.Presentation
 						_nodes.RemoveAfter(_selectedNode);
 
 				if (_selectedNode.Before is not null)
-					if (Vector2.Distance(v, new(_selectedNode.Before.X, _selectedNode.Y)) <= 20)
+					if (Vector2.Distance(v, new(_selectedNode.Before.X, _selectedNode.Before.Y)) <= 20)
 						_nodes.RemoveBefore(_selectedNode);
 
 				if (new Rectangle(DiagramBoxPair.First.X, DiagramBoxPair.First.Y, DiagramBoxPair.First.Width, DiagramBoxPair.First.Height).Contains(_selectedNode.X, _selectedNode.Y))
@@ -173,6 +204,7 @@ namespace UMLDiagframApp.Presentation
 
 				if (SegmentSelcted(firstCords, cords))
 				{
+					_selectedSegment = new(null, selectedNode);
 					return true;
 				}
 
