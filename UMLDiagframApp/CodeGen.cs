@@ -27,7 +27,7 @@ namespace UMLDiagframApp
 				 text += $"public class {box.Name} \n{{\n";
 				foreach (var atr in box.Attributes)
 				{
-					text += $"{atr.Modifier.ToString().ToLower()} {atr.Type} {atr.Name};\n";
+					text += $"\t{atr.Modifier.ToString().ToLower()} {atr.Type} {atr.Name};\n";
 				}
 				foreach (var met in box.Methods) 
 				{
@@ -46,7 +46,7 @@ namespace UMLDiagframApp
 
 						first = false;
 					}
-					text += $"{met.Modifier.ToString().ToLower()} {met.Type} {met.Name}({pars}) => throw new NotImplementedException();\n";
+					text += $"\t{met.Modifier.ToString().ToLower()} {met.Type} {met.Name}({pars}) => throw new NotImplementedException();\n";
 				} 
 
 
