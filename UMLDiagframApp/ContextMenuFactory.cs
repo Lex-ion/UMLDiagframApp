@@ -28,7 +28,7 @@ namespace UMLDiagframApp
 				]);
 		}
 
-		public ContextMenu GetSelectedBoxMenu(int x, int y, ISelectable selected)
+		public ContextMenu GetSelectedMenu(int x, int y, ISelectable selected)
 		{
 			ContextMenuCommand[] baseCommands = [       new("Odstranit",()=>Delete(selected))
 				];
@@ -54,6 +54,12 @@ namespace UMLDiagframApp
 					cmds.Add(new("Upravit výběr", box.UpdateItem));
 					cmds.Add(new("Odebrat vyběr", box.RemoveItem));
 				}
+			}
+				else if (selected is ConnectionLine)
+			{
+				var line = (ConnectionLine)selected;
+				cmds.Add(new($"Změnit multiplicitu pro: {line.DiagramBoxPair.First.Name}", () => { ChangeMultiplicity(true, line); }));
+				cmds.Add(new($"Změnit multiplicitu pro: {line.DiagramBoxPair.Second.Name}", () => { ChangeMultiplicity(false, line); }));
 			}
 
 			return new ContextMenu(x, y, cmds);
@@ -247,6 +253,19 @@ namespace UMLDiagframApp
 
 			_drawables.Remove(box2); _selectables.Remove(box2);
 			_drawables.Add(box2); _selectables.Add(box2);
+		}
+
+		private void ChangeMultiplicity(bool isFirst, ConnectionLine line)
+		{
+
+			TextInputForm t = new TextInputForm("", new NoneValidationStrategy());
+			t.ShowDialog();
+			if (t.DialogResult == DialogResult.Abort)
+				return;
+			if (isFirst)
+				line.FirstMultiplicity = t.Value;
+			else
+				line.SecondMultiplicity = t.Value;
 		}
 
 	}

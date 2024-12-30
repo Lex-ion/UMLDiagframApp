@@ -160,7 +160,7 @@ namespace UMLDiagframApp.Presentation
 				{
 					var cords = (args.PositionX - _args.ViewportOffsetX, args.PositionY - _args.ViewportOffsetY);
 					ContextMenu menu = _selected is null ? _menuFactory.GetViewPortMenu(cords.Item1 - 1, cords.Item2 - 1)
-						: _menuFactory.GetSelectedBoxMenu(cords.Item1 - 1, cords.Item2 - 1, _selected);
+						: _menuFactory.GetSelectedMenu(cords.Item1 - 1, cords.Item2 - 1, _selected);
 
 					_drawables.Add(menu);
 					_selectables.Add(menu);

@@ -7,13 +7,15 @@ namespace UMLDiagframApp.Presentation
 	{
 		public DiagramBoxPair DiagramBoxPair { get; set; }
 
-		ConnectionNodeList _nodes;
+		public string FirstMultiplicity { get; set; }
+		public string SecondMultiplicity { get; set; }
 
 		public ConnectionNode? SelectedNode { get; private set; }
 
 		private ConnectionLineSegment? _selectedSegment;
 		private ConnectionNode? _selectedNode;
 
+		ConnectionNodeList _nodes;
 
 
 		private int? _selectionX;
@@ -23,29 +25,59 @@ namespace UMLDiagframApp.Presentation
 
 		double dist;
 
+		private PointF? _oldFirstIntersection;
+		private PointF? _oldSecondtIntersection;
+
 		public ConnectionLine(DiagramBox firstBox, DiagramBox secondBox) : base(0, 0, 50, 50)
 		{
 			DiagramBoxPair = new DiagramBoxPair(firstBox, secondBox);
 
 			_nodes = new ConnectionNodeList();
-		/*	_nodes.Add(new(0, 0));
-			_nodes.Add(new(100, 120));
-			_nodes.Add(new(100, 140));
-			_nodes.Add(new(100, 160));
-			_nodes.Add(new(100, 180));
-			_nodes.Add(new(100, 200));
-			_nodes.Add(new(-200, -300));*/
+
+			FirstMultiplicity = "1";
+			SecondMultiplicity = "1";
 		}
 
 		public override void Draw(DrawArgs args, Graphics g)
 		{
 
+
 			(int, int) firstCords = (DiagramBoxPair.First.CenterX, DiagramBoxPair.First.CenterY) + args;
 			(int, int) lastCords = (DiagramBoxPair.Second.CenterX, DiagramBoxPair.Second.CenterY) + args;
 
+			Font f = new(FontFamily.GenericMonospace, 15 * args.ViewportScale, FontStyle.Regular);
 			if (_nodes.Count <= 0)
 			{
 				g.DrawLine(Pens.Azure, new(firstCords.Item1, firstCords.Item2), new(lastCords.Item1, lastCords.Item2));
+				var intersection = GetLineRectangleIntersection(firstCords, lastCords, args*(DiagramBoxPair.First.X+args.ViewportOffsetX), args*(DiagramBoxPair.First.Y+args.ViewportOffsetY),(DiagramBoxPair.First.X+DiagramBoxPair.First.Width+args.ViewportOffsetX)*args , (DiagramBoxPair.First.Height+DiagramBoxPair.First.Y+args.ViewportOffsetY)*args);
+				if(intersection.HasValue)
+					_oldFirstIntersection = intersection.Value;
+				
+				if (_oldFirstIntersection.HasValue)
+				{
+
+					Vector2 v = new(_oldFirstIntersection.Value.X - firstCords.Item1, _oldFirstIntersection.Value.Y - firstCords.Item2);
+					v = Vector2.Normalize(v);
+
+					// Pokud existuje průsečík, vykreslit ho
+					g.FillEllipse(Brushes.Red, _oldFirstIntersection.Value.X - 5, _oldFirstIntersection.Value.Y - 5, 10, 10);
+					g.DrawString(FirstMultiplicity, f, Brushes.Black, _oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50);
+
+
+				}
+				var intersection2 = GetLineRectangleIntersection(firstCords, lastCords, args * (DiagramBoxPair.Second.X + args.ViewportOffsetX), args * (DiagramBoxPair.Second.Y + args.ViewportOffsetY), (DiagramBoxPair.Second.X + DiagramBoxPair.Second.Width + args.ViewportOffsetX) * args, (DiagramBoxPair.Second.Height + DiagramBoxPair.Second.Y + args.ViewportOffsetY) * args);
+				
+				if(intersection2.HasValue) 
+					_oldSecondtIntersection = intersection2.Value;
+				if (_oldSecondtIntersection.HasValue)
+				{
+					Vector2 v = new(_oldSecondtIntersection.Value.X-lastCords.Item1,_oldSecondtIntersection.Value.Y-lastCords.Item2);
+					v = Vector2.Normalize(v);
+
+					// Pokud existuje průsečík, vykreslit ho
+					g.FillEllipse(Brushes.Red, _oldSecondtIntersection.Value.X - 5, _oldSecondtIntersection.Value.Y - 5, 10, 10);
+					g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X+v.X*50, _oldSecondtIntersection.Value.Y+v.Y*50);
+				}
 			}
 			else
 			{
@@ -54,6 +86,24 @@ namespace UMLDiagframApp.Presentation
 				ConnectionNode? selectedNode = _nodes.First!;
 
 				g.DrawLine(Pens.Azure, new(firstCords.Item1, firstCords.Item2), new(cords.Item1, cords.Item2));
+
+				var intersection = GetLineRectangleIntersection(firstCords, cords, args * (DiagramBoxPair.First.X + args.ViewportOffsetX), args * (DiagramBoxPair.First.Y + args.ViewportOffsetY), (DiagramBoxPair.First.X + DiagramBoxPair.First.Width + args.ViewportOffsetX) * args, (DiagramBoxPair.First.Height + DiagramBoxPair.First.Y + args.ViewportOffsetY) * args);
+				if (intersection.HasValue)
+					_oldFirstIntersection = intersection.Value;
+
+				if (_oldFirstIntersection.HasValue)
+				{
+
+					Vector2 v = new(_oldFirstIntersection.Value.X - firstCords.Item1, _oldFirstIntersection.Value.Y - firstCords.Item2);
+					v = Vector2.Normalize(v);
+
+					// Pokud existuje průsečík, vykreslit ho
+					g.FillEllipse(Brushes.Red, _oldFirstIntersection.Value.X - 5, _oldFirstIntersection.Value.Y - 5, 10, 10);
+					g.DrawString(FirstMultiplicity, f, Brushes.Black, _oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50);
+
+
+				}
+
 
 				for (int i = 0; i < _nodes.Count; i++)
 				{
@@ -67,6 +117,21 @@ namespace UMLDiagframApp.Presentation
 								g.FillEllipse(Brushes.LightGoldenrodYellow, new RectangleF(cords.Item1 - 5, cords.Item2 - 5, 10, 10));
 							else
 								g.DrawEllipse(Pens.LightGoldenrodYellow, new RectangleF(cords.Item1 - 5, cords.Item2 - 5, 10, 10));
+						}
+
+
+						var intersection2 = GetLineRectangleIntersection(lastCords, cords, args * (DiagramBoxPair.Second.X + args.ViewportOffsetX), args * (DiagramBoxPair.Second.Y + args.ViewportOffsetY), (DiagramBoxPair.Second.X + DiagramBoxPair.Second.Width + args.ViewportOffsetX) * args, (DiagramBoxPair.Second.Height + DiagramBoxPair.Second.Y + args.ViewportOffsetY) * args);
+
+						if (intersection2.HasValue)
+							_oldSecondtIntersection = intersection2.Value;
+						if (_oldSecondtIntersection.HasValue)
+						{
+							Vector2 v = new(_oldSecondtIntersection.Value.X - lastCords.Item1, _oldSecondtIntersection.Value.Y - lastCords.Item2);
+							v = Vector2.Normalize(v);
+
+							// Pokud existuje průsečík, vykreslit ho
+							g.FillEllipse(Brushes.Red, _oldSecondtIntersection.Value.X - 5, _oldSecondtIntersection.Value.Y - 5, 10, 10);
+							g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50, _oldSecondtIntersection.Value.Y + v.Y * 50);
 						}
 
 						break;
@@ -275,6 +340,68 @@ namespace UMLDiagframApp.Presentation
 				isSelected = numerator / denominator < 15;
 				return isSelected;
 			}
+
+		}
+
+
+		// Funkce pro nalezení průsečíků čáry s okraji obdélníka
+		public static PointF? GetLineRectangleIntersection((int, int) start, (int, int) end, int x1, int y1, int x2, int y2)
+		{
+			// Parametry čáry
+			var lineStart = new PointF(start.Item1, start.Item2);
+			var lineEnd = new PointF(end.Item1, end.Item2);
+
+			// Okraje obdélníka (levý, pravý, horní, dolní okraj)
+			var edges = new[]
+			{
+			new { A = new PointF(x1, y1), B = new PointF(x1, y2) }, // Levý okraj
+            new { A = new PointF(x1, y1), B = new PointF(x2, y1) }, // Dolní okraj
+            new { A = new PointF(x2, y1), B = new PointF(x2, y2) }, // Pravý okraj
+            new { A = new PointF(x1, y2), B = new PointF(x2, y2) }  // Horní okraj
+        };
+
+			// Procházení každého okraje a hledání průsečíku
+			foreach (var edge in edges)
+			{
+				var intersection = GetLineIntersection(lineStart, lineEnd, edge.A, edge.B);
+				if (intersection.HasValue)
+				{
+					// Zkontrolujeme, zda průsečík leží na segmentu (mezi těmito body)
+					if (IsPointOnSegment(intersection.Value, edge.A, edge.B) && IsPointOnSegment(intersection.Value, lineStart, lineEnd))
+					{
+						return intersection.Value;
+					}
+				}
+			}
+			return null; // Žádný průsečík
+		}
+
+		// Funkce pro výpočet průsečíku dvou čar (segmentů)
+		public static PointF? GetLineIntersection(PointF p1, PointF p2, PointF p3, PointF p4)
+		{
+			float x1 = p1.X, y1 = p1.Y, x2 = p2.X, y2 = p2.Y;
+			float x3 = p3.X, y3 = p3.Y, x4 = p4.X, y4 = p4.Y;
+
+			// Výpočty podle determinantů pro rovnici přímek
+			float denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+			if (denom == 0) return null; // Čáry jsou rovnoběžné
+
+			float intersectX = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom;
+			float intersectY = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
+
+			return new PointF(intersectX, intersectY);
+		}
+
+		// Funkce pro kontrolu, zda bod leží na segmentu mezi dvěma body
+		public static bool IsPointOnSegment(PointF point, PointF segStart, PointF segEnd)
+		{
+			// Zkontrolujeme, zda bod leží mezi začátkem a koncem segmentu
+			const float epsilon = 1e-6f; // Tolerance pro přesnost výpočtu
+
+			bool withinX = point.X >= Math.Min(segStart.X, segEnd.X) - epsilon && point.X <= Math.Max(segStart.X, segEnd.X) + epsilon;
+			bool withinY = point.Y >= Math.Min(segStart.Y, segEnd.Y) - epsilon && point.Y <= Math.Max(segStart.Y, segEnd.Y) + epsilon;
+
+			return withinX && withinY;
 		}
 	}
 }
