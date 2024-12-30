@@ -228,7 +228,27 @@ namespace UMLDiagframApp.Presentation
 
 				_selectionX = null;
 				_selectionY = null;
+
+				var currNode = _nodes.First;
+				int minX=_nodes.First?.X??0;
+				int minY= _nodes.First?.Y??0;
+				int maxX= _nodes.First?.X??0;
+				int maxY= _nodes.First?.Y??0;
+				while (currNode!.After != null)
+				{
+					currNode = currNode.After;
+					if(currNode.X < minX) minX = currNode.X;
+					if(currNode.Y < minY) minY = currNode.Y;
+					if(currNode.X > maxX) maxX = currNode.X;
+					if(currNode.Y > maxY) maxY = currNode.Y;
+				} 
+				X= minX;
+				Y= minY;
+				Width = Math.Abs(maxX - minX);
+				Height = Math.Abs(maxY - minY);
 			}
+
+		
 
 			//	throw new NotImplementedException();
 		}
