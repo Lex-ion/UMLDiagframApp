@@ -58,6 +58,36 @@ namespace UMLDiagframApp
 				else if (selected is ConnectionLine)
 			{
 				var line = (ConnectionLine)selected;
+
+				var aC = new ContextMenuCommand("Přepnout na asociaci", () => { line.ConnectionType = ConnectionType.Asociation; });
+				var oAC = new ContextMenuCommand("Přepnout na jednosměrnou asociaci", () => { line.ConnectionType = ConnectionType.OneWayAsociation; });
+				var agC = new ContextMenuCommand("Přepnout na agregaci", () => { line.ConnectionType = ConnectionType.Agregation; });
+				var cC = new ContextMenuCommand("Přepnout na kompozici", () => { line.ConnectionType = ConnectionType.Composition; });
+				var gC = new ContextMenuCommand("Přepnout na generalizaci", () => { line.ConnectionType = ConnectionType.Generalization; });
+
+				cmds.AddRange([aC,oAC,agC,cC,gC]);
+
+				switch (line.ConnectionType)
+				{
+					case ConnectionType.Asociation:
+						cmds.Remove(aC);
+						break;
+					case ConnectionType.OneWayAsociation:
+						cmds.Remove(oAC);
+						break;
+					case ConnectionType.Agregation:
+						cmds.Remove(agC);
+						break;
+					case ConnectionType.Composition:
+						cmds.Remove(cC);
+						break;
+					case ConnectionType.Generalization:
+						cmds.Remove(gC);
+						break;
+					default:
+						break;
+				}
+
 				cmds.Add(new($"Změnit multiplicitu pro: {line.DiagramBoxPair.First.Name}", () => { ChangeMultiplicity(true, line); }));
 				cmds.Add(new($"Změnit multiplicitu pro: {line.DiagramBoxPair.Second.Name}", () => { ChangeMultiplicity(false, line); }));
 			}

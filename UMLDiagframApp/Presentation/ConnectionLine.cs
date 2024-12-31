@@ -9,8 +9,7 @@ namespace UMLDiagframApp.Presentation
 
 		public string FirstMultiplicity { get; set; }
 		public string SecondMultiplicity { get; set; }
-
-		public ConnectionNode? SelectedNode { get; private set; }
+		public ConnectionType ConnectionType { get; set; }
 
 		private ConnectionLineSegment? _selectedSegment;
 		private ConnectionNode? _selectedNode;
@@ -36,6 +35,8 @@ namespace UMLDiagframApp.Presentation
 
 			FirstMultiplicity = "1";
 			SecondMultiplicity = "1";
+
+			ConnectionType = ConnectionType.Asociation;
 		}
 
 		public override void Draw(DrawArgs args, Graphics g)
@@ -58,11 +59,35 @@ namespace UMLDiagframApp.Presentation
 
 					Vector2 v = new(_oldFirstIntersection.Value.X - firstCords.Item1, _oldFirstIntersection.Value.Y - firstCords.Item2);
 					v = Vector2.Normalize(v);
+					var u = new Vector2(v.Y, -v.X);
+					
+					//g.FillEllipse(Brushes.Red, _oldFirstIntersection.Value.X - 5, _oldFirstIntersection.Value.Y - 5, 10, 10);
+					/*
+					g.FillEllipse(Brushes.Red, _oldFirstIntersection.Value.X - 5 + v.X * 25 + u.X * 15, _oldFirstIntersection.Value.Y - 5 + v.Y * 25 + u.Y * 15, 10, 10);
+					g.FillEllipse(Brushes.Red,	_oldFirstIntersection.Value.X - 5 + v.X * 25 + -u.X * 15, _oldFirstIntersection.Value.Y - 5 + v.Y * 25 + -u.Y * 15, 10, 10);
+					*/
+					Point left = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + -u.X * 15),(int)(_oldFirstIntersection.Value.Y + v.Y * 25 + -u.Y * 15));
+					Point right = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + u.X * 15),(int)( _oldFirstIntersection.Value.Y  + v.Y * 25 + u.Y * 15));
+					switch (ConnectionType)
+					{
+						case ConnectionType.Asociation:
 
-					// Pokud existuje průsečík, vykreslit ho
-					g.FillEllipse(Brushes.Red, _oldFirstIntersection.Value.X - 5, _oldFirstIntersection.Value.Y - 5, 10, 10);
+							break;
+						case ConnectionType.OneWayAsociation:
+							g.DrawLine(Pens.Azure, _oldFirstIntersection.Value, left);
+							g.DrawLine(Pens.Azure, _oldFirstIntersection.Value, right);
+							break;
+						case ConnectionType.Agregation:
+							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50), left]);
+							break;
+						case ConnectionType.Composition:
+							g.FillPolygon(Brushes.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50), left]);
+							break;
+						case ConnectionType.Generalization:
+							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, left]);
+							break;
+					}
 					g.DrawString(FirstMultiplicity, f, Brushes.Black, _oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50);
-
 
 				}
 				var intersection2 = GetLineRectangleIntersection(firstCords, lastCords, args * (DiagramBoxPair.Second.X + args.ViewportOffsetX), args * (DiagramBoxPair.Second.Y + args.ViewportOffsetY), (DiagramBoxPair.Second.X + DiagramBoxPair.Second.Width + args.ViewportOffsetX) * args, (DiagramBoxPair.Second.Height + DiagramBoxPair.Second.Y + args.ViewportOffsetY) * args);
@@ -97,8 +122,33 @@ namespace UMLDiagframApp.Presentation
 					Vector2 v = new(_oldFirstIntersection.Value.X - firstCords.Item1, _oldFirstIntersection.Value.Y - firstCords.Item2);
 					v = Vector2.Normalize(v);
 
+					var u = new Vector2(v.Y, -v.X);
 					// Pokud existuje průsečík, vykreslit ho
-					g.FillEllipse(Brushes.Red, _oldFirstIntersection.Value.X - 5, _oldFirstIntersection.Value.Y - 5, 10, 10);
+					//g.FillEllipse(Brushes.Red, _oldFirstIntersection.Value.X - 5, _oldFirstIntersection.Value.Y - 5, 10, 10);
+
+
+					Point left = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + -u.X * 15), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 + -u.Y * 15));
+					Point right = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + u.X * 15), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 + u.Y * 15));
+					switch (ConnectionType)
+					{
+						case ConnectionType.Asociation:
+
+							break;
+						case ConnectionType.OneWayAsociation:
+							g.DrawLine(Pens.Azure, _oldFirstIntersection.Value, left);
+							g.DrawLine(Pens.Azure, _oldFirstIntersection.Value, right);
+							break;
+						case ConnectionType.Agregation:
+							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50), left]);
+							break;
+						case ConnectionType.Composition:
+							g.FillPolygon(Brushes.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50), left]);
+							break;
+						case ConnectionType.Generalization:
+							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, left]);
+							break;
+					}
+
 					g.DrawString(FirstMultiplicity, f, Brushes.Black, _oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50);
 
 
@@ -154,6 +204,7 @@ namespace UMLDiagframApp.Presentation
 			}
 			g.DrawString(dist.ToString(), SystemFonts.DefaultFont, Brushes.Black, new Point(0, 0));
 		}
+
 
 		public override void MouseInput(MouseArgs mArgs, DrawArgs dArgs)
 		{
