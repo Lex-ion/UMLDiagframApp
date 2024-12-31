@@ -179,8 +179,8 @@ namespace UMLDiagframApp.Presentation
 							Vector2 v = new(_oldSecondtIntersection.Value.X - lastCords.Item1, _oldSecondtIntersection.Value.Y - lastCords.Item2);
 							v = Vector2.Normalize(v);
 
-							// Pokud existuje průsečík, vykreslit ho
-							g.FillEllipse(Brushes.Red, _oldSecondtIntersection.Value.X - 5, _oldSecondtIntersection.Value.Y - 5, 10, 10);
+							
+							//	g.FillEllipse(Brushes.Red, _oldSecondtIntersection.Value.X - 5, _oldSecondtIntersection.Value.Y - 5, 10, 10);
 							g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50, _oldSecondtIntersection.Value.Y + v.Y * 50);
 						}
 

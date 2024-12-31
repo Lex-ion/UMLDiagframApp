@@ -239,7 +239,7 @@ namespace UMLDiagframApp.Presentation
 				ExportToPng();
 			}
 			if (keyEvent.KeyCode == Keys.F) {
-				CodeGen gen = new(_selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList(), "Code.cs");
+				CodeGen gen = new("Code.cs", _selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList(), _selectables.Where(s => s is ConnectionLine).Select(s => s as ConnectionLine).ToList());
 				gen.Generate();
 			}
 		}
