@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using UMLDiagframApp.Entities;
 
@@ -11,6 +12,7 @@ namespace UMLDiagframApp.Presentation
     {
         public virtual int X { get => _x; set => _x = value; }
         public virtual int Y { get => _y; set => _y = value; }
+		[JsonIgnore]
 		public bool Destroyed { get; private set; }
 
 		public int Width { get; protected set; }

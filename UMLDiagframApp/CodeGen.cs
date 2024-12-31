@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UMLDiagframApp.Presentation;
+﻿using UMLDiagframApp.Presentation;
 
 namespace UMLDiagframApp
 {
@@ -22,17 +17,18 @@ namespace UMLDiagframApp
 		}
 
 		public void Generate()
-		{ string text = "";
+		{
+			string text = "";
 			foreach (var box in _diagramBoxes)
 			{
-				 text += $"public partial class {box.Name} \n{{\n";
+				text += $"public partial class {box.Name} \n{{\n";
 				foreach (var atr in box.Attributes)
 				{
 					text += $"\t{atr.Modifier.ToString().ToLower()} {atr.Type} {atr.Name};\n";
 				}
-				foreach (var met in box.Methods) 
+				foreach (var met in box.Methods)
 				{
-					string pars="";
+					string pars = "";
 					bool first = true;
 					foreach (var item in met.Params.Split(','))
 					{
@@ -42,25 +38,25 @@ namespace UMLDiagframApp
 						if (!first)
 							pars += ",";
 
-						pars += d[1]+" ";
+						pars += d[1] + " ";
 						pars += d[0];
 
 						first = false;
 					}
 					text += $"\t{met.Modifier.ToString().ToLower()} {met.Type} {met.Name}({pars}) => throw new NotImplementedException();\n";
-				} 
+				}
 
 
 				text += "}\n\n";
 			}
 
-			foreach(var line in _connectionLines)
+			foreach (var line in _connectionLines)
 			{
-				if(line .ConnectionType == Entities.ConnectionType.Generalization)
+				if (line.ConnectionType == Entities.ConnectionType.Generalization)
 				{
 					text += $"public partial class {line.DiagramBoxPair.Second.Name}:{line.DiagramBoxPair.First.Name} {{}}\n\n";
 				}
-				else if(line.ConnectionType == Entities.ConnectionType.OneWayAsociation)
+				else if (line.ConnectionType == Entities.ConnectionType.OneWayAsociation)
 				{
 					text += $"public partial class {line.DiagramBoxPair.Second.Name}\n{{\n\tpublic {line.DiagramBoxPair.First.Name} {line.DiagramBoxPair.First.Name} {{get;set;}} \n}}\n\n";
 				}

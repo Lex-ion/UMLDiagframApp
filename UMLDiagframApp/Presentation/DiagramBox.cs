@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using UMLDiagframApp.Entities;
 using UMLDiagframApp.ValidationStrategies;
 
@@ -7,6 +8,7 @@ namespace UMLDiagframApp.Presentation
 	public class DiagramBox : AbstractSelectable
 	{
 		public string Name { get; set; }
+		[JsonIgnore]
 		public bool Changed { get; set; }
 
 		private int? _selectionX;
@@ -14,15 +16,16 @@ namespace UMLDiagframApp.Presentation
 		private int _oldX;
 		private int _oldY;
 		bool focused;
-
+		[JsonIgnore]
 		public int SelectedIndex { get; private set; } = -1;
 
 		float lastScale;
 
 		public List<Entities.Attribute> Attributes { get; }
 		public List<Entities.Method> Methods { get; }
-
+		[JsonIgnore]
 		public int CenterX => (int)((X + X + Width) / 2);
+		[JsonIgnore]
 		public int CenterY => (int)((Y+Y+Height) / 2);
 
 

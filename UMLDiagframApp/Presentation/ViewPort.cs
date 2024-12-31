@@ -242,6 +242,10 @@ namespace UMLDiagframApp.Presentation
 				CodeGen gen = new("Code.cs", _selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList(), _selectables.Where(s => s is ConnectionLine).Select(s => s as ConnectionLine).ToList());
 				gen.Generate();
 			}
+			if (keyEvent.KeyCode == Keys.S) {
+				JSONManipulator m = new(_drawables, _selectables);
+				m.Save("Data.json");
+			}
 		}
 
 
