@@ -29,7 +29,7 @@ namespace UMLDiagframApp.Presentation
 			{
 				int w =	TextRenderer.MeasureText(command.Name,_font).Width;
 				if (w > base.Width) {
-				base.Width = w;
+				base.Width = w+60;
 				}
 			}
 		}

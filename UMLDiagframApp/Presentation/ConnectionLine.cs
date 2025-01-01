@@ -75,11 +75,6 @@ namespace UMLDiagframApp.Presentation
 					v = Vector2.Normalize(v);
 					var u = new Vector2(v.Y, -v.X);
 
-					//g.FillEllipse(Brushes.Red, _oldFirstIntersection.Value.X - 5, _oldFirstIntersection.Value.Y - 5, 10, 10);
-					/*
-					g.FillEllipse(Brushes.Red, _oldFirstIntersection.Value.X - 5 + v.X * 25 + u.X * 15, _oldFirstIntersection.Value.Y - 5 + v.Y * 25 + u.Y * 15, 10, 10);
-					g.FillEllipse(Brushes.Red,	_oldFirstIntersection.Value.X - 5 + v.X * 25 + -u.X * 15, _oldFirstIntersection.Value.Y - 5 + v.Y * 25 + -u.Y * 15, 10, 10);
-					*/
 					Point left = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + -u.X * 15), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 + -u.Y * 15));
 					Point right = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + u.X * 15), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 + u.Y * 15));
 					switch (ConnectionType)
@@ -101,7 +96,9 @@ namespace UMLDiagframApp.Presentation
 							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, left]);
 							break;
 					}
-					g.DrawString(FirstMultiplicity, f, Brushes.Black, _oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50);
+
+					if (ConnectionType != ConnectionType.Generalization)
+						g.DrawString(FirstMultiplicity, f, Brushes.Black, _oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50);
 
 				}
 				var intersection2 = GetLineRectangleIntersection(firstCords, lastCords, args * (DiagramBoxPair.Second.X + args.ViewportOffsetX), args * (DiagramBoxPair.Second.Y + args.ViewportOffsetY), (DiagramBoxPair.Second.X + DiagramBoxPair.Second.Width + args.ViewportOffsetX) * args, (DiagramBoxPair.Second.Height + DiagramBoxPair.Second.Y + args.ViewportOffsetY) * args);
@@ -113,9 +110,8 @@ namespace UMLDiagframApp.Presentation
 					Vector2 v = new(_oldSecondtIntersection.Value.X - lastCords.Item1, _oldSecondtIntersection.Value.Y - lastCords.Item2);
 					v = Vector2.Normalize(v);
 
-					// Pokud existuje průsečík, vykreslit ho
-					g.FillEllipse(Brushes.Red, _oldSecondtIntersection.Value.X - 5, _oldSecondtIntersection.Value.Y - 5, 10, 10);
-					g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50, _oldSecondtIntersection.Value.Y + v.Y * 50);
+					if (ConnectionType != ConnectionType.Generalization)
+						g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50, _oldSecondtIntersection.Value.Y + v.Y * 50);
 				}
 			}
 			else
@@ -137,9 +133,7 @@ namespace UMLDiagframApp.Presentation
 					v = Vector2.Normalize(v);
 
 					var u = new Vector2(v.Y, -v.X);
-					// Pokud existuje průsečík, vykreslit ho
-					//g.FillEllipse(Brushes.Red, _oldFirstIntersection.Value.X - 5, _oldFirstIntersection.Value.Y - 5, 10, 10);
-
+					
 
 					Point left = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + -u.X * 15), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 + -u.Y * 15));
 					Point right = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + u.X * 15), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 + u.Y * 15));
@@ -163,7 +157,8 @@ namespace UMLDiagframApp.Presentation
 							break;
 					}
 
-					g.DrawString(FirstMultiplicity, f, Brushes.Black, _oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50);
+					if (ConnectionType != ConnectionType.Generalization)
+						g.DrawString(FirstMultiplicity, f, Brushes.Black, _oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50);
 
 
 				}
@@ -193,8 +188,7 @@ namespace UMLDiagframApp.Presentation
 							Vector2 v = new(_oldSecondtIntersection.Value.X - lastCords.Item1, _oldSecondtIntersection.Value.Y - lastCords.Item2);
 							v = Vector2.Normalize(v);
 
-
-							//	g.FillEllipse(Brushes.Red, _oldSecondtIntersection.Value.X - 5, _oldSecondtIntersection.Value.Y - 5, 10, 10);
+							if(ConnectionType !=ConnectionType.Generalization)
 							g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50, _oldSecondtIntersection.Value.Y + v.Y * 50);
 						}
 
@@ -315,7 +309,6 @@ namespace UMLDiagframApp.Presentation
 
 
 
-			//	throw new NotImplementedException();
 		}
 
 		public override bool IsSelected(int x, int y, DrawArgs args)

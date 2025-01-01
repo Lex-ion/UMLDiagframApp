@@ -13,7 +13,7 @@ namespace UMLDiagframApp
 		public Form1()
 		{
 
-			_vp = new ViewPort(100,100);
+			_vp = new ViewPort(Width,Height);
 
 			InitializeComponent();
 			
