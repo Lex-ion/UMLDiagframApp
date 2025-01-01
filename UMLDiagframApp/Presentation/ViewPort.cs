@@ -247,8 +247,6 @@ namespace UMLDiagframApp.Presentation
 
 		public void HandleKeyInput(KeyEventArgs keyEvent)
 		{
-			if (_selected is not null)
-				return;
 			//system input handle ctrl+s and etc...
 			if (keyEvent.KeyCode == Keys.E)
 			{
@@ -306,7 +304,7 @@ namespace UMLDiagframApp.Presentation
 				int progress = 0;
 
 
-				Point upperCorner = new(_drawables[0].X, _drawables[1].Y);
+				Point upperCorner = new(_drawables[0].X, _drawables[0].Y);
 				Point lowerCorner = new(_drawables[0].X + _drawables[0].Width, _drawables[0].Y + _drawables[0].Height);
 
 				foreach (var drawable in _drawables[1..])

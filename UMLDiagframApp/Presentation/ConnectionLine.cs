@@ -210,7 +210,7 @@ namespace UMLDiagframApp.Presentation
 
 				}
 			}
-			g.DrawString(dist.ToString(), SystemFonts.DefaultFont, Brushes.Black, new Point(0, 0));
+		//	g.DrawString(dist.ToString(), SystemFonts.DefaultFont, Brushes.Black, new Point(0, 0));
 		}
 
 
