@@ -11,15 +11,18 @@ namespace UMLDiagframApp.DTOs
     {
         public List<DiagramBox> DiagramBoxes { get; set; }
         public List<ConnectionLineDTO> ConnectionLines { get; set; }
+        public bool DeserializedSuccesfully { get; set; }
         public ViewPortDTO() {
         DiagramBoxes = new List<DiagramBox>();
             ConnectionLines = new List<ConnectionLineDTO>();
+            DeserializedSuccesfully = false;
         }
 
         public ViewPortDTO(List<DiagramBox> diagramBoxes, List<ConnectionLineDTO> connectionLines)
         {
             DiagramBoxes = diagramBoxes;
             ConnectionLines = connectionLines;
+            DeserializedSuccesfully=true;
         }
     }
 }

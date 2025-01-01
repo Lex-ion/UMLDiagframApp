@@ -20,7 +20,12 @@ namespace UMLDiagframApp
 		public void Load(string path)
 		{
 			string json = File.ReadAllText(path);
-			ViewPortDTO viewPortDTO = JsonSerializer.Deserialize<ViewPortDTO>(json, new JsonSerializerOptions() {});
+			ViewPortDTO? viewPortDTO = JsonSerializer.Deserialize<ViewPortDTO?>(json, new JsonSerializerOptions() {});
+
+			if (viewPortDTO == null||!viewPortDTO.DeserializedSuccesfully) {
+				MessageBox.Show("Soubor nebylo možné načíst.","Chyba při načítání",MessageBoxButtons.OK,MessageBoxIcon.Error);
+				return;
+			}
 			_drawables.Clear();
 			_selectables.Clear();
 

@@ -22,8 +22,17 @@ namespace UMLDiagframApp.Presentation
 		MouseArgs? mouseArgs;
 
 		ContextMenuFactory _menuFactory;
-		public ViewPort(int width, int height)
+
+		private SaveFileDialog _saveFileDialog;
+		private OpenFileDialog _openFileDialog;
+
+		private JSONManipulator _jsonManipulator;
+
+		public ViewPort(int width, int height, SaveFileDialog saveFileDialog,OpenFileDialog openFileDialog)
 		{
+			_saveFileDialog = saveFileDialog;
+			_openFileDialog = openFileDialog;
+
 			_args = new(width, height, 0, 0, 1);
 			_drawables = new List<IDrawable>();
 			_selectables = new List<ISelectable>();
@@ -49,6 +58,7 @@ namespace UMLDiagframApp.Presentation
 			_args.ViewportSizeY = height;
 
 			_menuFactory = new(_drawables, _selectables, _args);
+			_jsonManipulator = new(_drawables, _selectables);
 		}
 
 
@@ -236,26 +246,43 @@ namespace UMLDiagframApp.Presentation
 			//system input handle ctrl+s and etc...
 			if (keyEvent.KeyCode == Keys.E)
 			{
-				ExportToPng();
+				_saveFileDialog.Filter = "Obrázek PNG|*.png";
+				var result = _saveFileDialog.ShowDialog();
+				if (result != DialogResult.OK)
+					return;
+
+				ExportToPng(_saveFileDialog.FileName);
 			}
 			if (keyEvent.KeyCode == Keys.F) {
-				CodeGen gen = new("Code.cs", _selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList(), _selectables.Where(s => s is ConnectionLine).Select(s => s as ConnectionLine).ToList());
+				_saveFileDialog.Filter = "Soubor C#|*.cs";
+				var result = _saveFileDialog.ShowDialog();
+				if (result != DialogResult.OK)
+					return;
+
+				CodeGen gen = new(_saveFileDialog.FileName, _selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList(), _selectables.Where(s => s is ConnectionLine).Select(s => s as ConnectionLine).ToList());
 				gen.Generate();
 			}
 			if (keyEvent.KeyCode == Keys.S) {
-				JSONManipulator m = new(_drawables, _selectables);
-				m.Save("Data.json");
+				_saveFileDialog.Filter = "Soubor JSON|*.json";
+				var result = _saveFileDialog.ShowDialog();
+				if (result != DialogResult.OK)
+					return;
+
+				_jsonManipulator.Save(_saveFileDialog.FileName);
 			}
 
 			if (keyEvent.KeyCode == Keys.L) {
-				JSONManipulator m = new(_drawables, _selectables);
-				m.Load("Data.json");
+				var result = _openFileDialog.ShowDialog();
+				if (result != DialogResult.OK)
+					return;
+
+				_jsonManipulator.Load(_openFileDialog.FileName);
 			}
 		}
 
 
 
-		public void ExportToPng()
+		public void ExportToPng(string path)
 		{
 			ProgressForm progressForm = new(0, _drawables.Count * 2, 0);
 
@@ -308,7 +335,7 @@ namespace UMLDiagframApp.Presentation
 					progress++;
 				}
 				g.Save();
-				bitmap.Save("out.png",System.Drawing.Imaging.ImageFormat.Png);
+				bitmap.Save(path,System.Drawing.Imaging.ImageFormat.Png);
 				g.Dispose();
 				bitmap.Dispose();
 				progressForm.Finished();

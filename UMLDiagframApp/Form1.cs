@@ -14,8 +14,8 @@ namespace UMLDiagframApp
 		{
 
 			InitializeComponent();
-			_vp = new ViewPort(Width,Height);
-
+			_vp = new ViewPort(Width,Height,saveFileDialog1,openFileDialog1);
+		
 			
 
 		}

@@ -29,6 +29,8 @@
 		private void InitializeComponent()
 		{
 			pictureBox1 = new PictureBox();
+			openFileDialog1 = new OpenFileDialog();
+			saveFileDialog1 = new SaveFileDialog();
 			((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
 			SuspendLayout();
 			// 
@@ -45,6 +47,18 @@
 			pictureBox1.MouseDown += Form1_MouseDown;
 			pictureBox1.MouseMove += Form1_MouseMove;
 			pictureBox1.MouseUp += Form1_MouseUp;
+			// 
+			// openFileDialog1
+			// 
+			openFileDialog1.DefaultExt = "json";
+			openFileDialog1.FileName = "openFileDialog1";
+			openFileDialog1.Filter = "Soubory JSON|*.json";
+			openFileDialog1.Title = "Vyberte Soubor";
+			// 
+			// saveFileDialog1
+			// 
+			saveFileDialog1.Filter = "Soubor JSON|*.json";
+			saveFileDialog1.Title = "Vyberte adresář";
 			// 
 			// Form1
 			// 
@@ -68,5 +82,7 @@
 		#endregion
 
 		private PictureBox pictureBox1;
+		private OpenFileDialog openFileDialog1;
+		private SaveFileDialog saveFileDialog1;
 	}
 }
