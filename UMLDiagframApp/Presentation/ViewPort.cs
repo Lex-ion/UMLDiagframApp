@@ -203,8 +203,7 @@ namespace UMLDiagframApp.Presentation
 				else
 				if (args.Button == MouseButtons.Middle)
 				{
-					_args.ViewportOffsetX = (int)((_args.ViewportSizeX / 2 - (int)_drawables.Average(d => d.X * _args.ViewportScale)) / _args.ViewportScale);
-					_args.ViewportOffsetY = (int)((_args.ViewportSizeY / 2 - (int)_drawables.Average(d => d.Y * _args.ViewportScale)) / _args.ViewportScale);
+					Center();
 				}
 
 
@@ -225,6 +224,13 @@ namespace UMLDiagframApp.Presentation
 			dy = args.PositionYDelta;
 
 			mouseArgs = args;
+		}
+
+		public void Center()
+		{
+			_args.ViewportOffsetX = (int)((_args.ViewportSizeX / 2 - (int)_drawables.Average(d => d.X * _args.ViewportScale)) / _args.ViewportScale);
+			_args.ViewportOffsetY = (int)((_args.ViewportSizeY / 2 - (int)_drawables.Average(d => d.Y * _args.ViewportScale)) / _args.ViewportScale);
+
 		}
 
 		public void Resize(int width, int height)
@@ -262,7 +268,7 @@ namespace UMLDiagframApp.Presentation
 				CodeGen gen = new(_saveFileDialog.FileName, _selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList(), _selectables.Where(s => s is ConnectionLine).Select(s => s as ConnectionLine).ToList());
 				gen.Generate();
 			}
-			if (keyEvent.KeyCode == Keys.S) {
+			if (keyEvent.KeyCode == Keys.S&&keyEvent.Control) {
 				_saveFileDialog.Filter = "Soubor JSON|*.json";
 				var result = _saveFileDialog.ShowDialog();
 				if (result != DialogResult.OK)
@@ -271,12 +277,13 @@ namespace UMLDiagframApp.Presentation
 				_jsonManipulator.Save(_saveFileDialog.FileName);
 			}
 
-			if (keyEvent.KeyCode == Keys.L) {
+			if (keyEvent.KeyCode == Keys.O&&keyEvent.Control) {
 				var result = _openFileDialog.ShowDialog();
 				if (result != DialogResult.OK)
 					return;
 
 				_jsonManipulator.Load(_openFileDialog.FileName);
+				Center();
 			}
 		}
 
