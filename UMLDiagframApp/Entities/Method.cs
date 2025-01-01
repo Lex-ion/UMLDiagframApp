@@ -21,6 +21,12 @@ namespace UMLDiagframApp.Entities
 			Name = text;
 			Params = @params;
 		}
+		public Method() { 
+		Modifier = ModifiersEnum.Public;
+			Type = "";
+			Name = string.Empty;
+			Params = string.Empty;
+		}
 
 		public override bool Equals(object? obj)
 		{

@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using UMLDiagframApp.DTOs;
 using UMLDiagframApp.Entities;
 
 namespace UMLDiagframApp.Presentation
@@ -14,7 +15,7 @@ namespace UMLDiagframApp.Presentation
 		private ConnectionLineSegment? _selectedSegment;
 		private ConnectionNode? _selectedNode;
 
-		ConnectionNodeList _nodes;
+		public ConnectionNodeList Nodes { get; set; }
 
 
 		private int? _selectionX;
@@ -27,16 +28,29 @@ namespace UMLDiagframApp.Presentation
 		private PointF? _oldFirstIntersection;
 		private PointF? _oldSecondtIntersection;
 
-		public ConnectionLine(DiagramBox firstBox, DiagramBox secondBox) : base(0, 0, 50, 50)
+		public ConnectionLine(DiagramBox firstBox, DiagramBox secondBox) : base(firstBox.X, firstBox.Y, 0, 0)
 		{
 			DiagramBoxPair = new DiagramBoxPair(firstBox, secondBox);
 
-			_nodes = new ConnectionNodeList();
+			Nodes = new ConnectionNodeList();
 
 			FirstMultiplicity = "1";
 			SecondMultiplicity = "1";
 
 			ConnectionType = ConnectionType.Asociation;
+		}
+
+		public ConnectionLine(ConnectionLineDTO dto,DiagramBoxPair pair) : base(dto.X, dto.Y, dto.Width, dto.Height)
+		{
+			Nodes = new ConnectionNodeList();
+			DiagramBoxPair = pair;
+			FirstMultiplicity = dto.FirstMultiplicity;
+			SecondMultiplicity = dto.SecondMultiplicity;
+			ConnectionType = dto.ConnectionType;
+			foreach (var node in dto.Nodes) {
+				Nodes.Add(new(node.X, node.Y));
+			}
+
 		}
 
 		public override void Draw(DrawArgs args, Graphics g)
@@ -47,27 +61,27 @@ namespace UMLDiagframApp.Presentation
 			(int, int) lastCords = (DiagramBoxPair.Second.CenterX, DiagramBoxPair.Second.CenterY) + args;
 
 			Font f = new(FontFamily.GenericMonospace, 15 * args.ViewportScale, FontStyle.Regular);
-			if (_nodes.Count <= 0)
+			if (Nodes.Count <= 0)
 			{
 				g.DrawLine(Pens.Azure, new(firstCords.Item1, firstCords.Item2), new(lastCords.Item1, lastCords.Item2));
-				var intersection = GetLineRectangleIntersection(firstCords, lastCords, args*(DiagramBoxPair.First.X+args.ViewportOffsetX), args*(DiagramBoxPair.First.Y+args.ViewportOffsetY),(DiagramBoxPair.First.X+DiagramBoxPair.First.Width+args.ViewportOffsetX)*args , (DiagramBoxPair.First.Height+DiagramBoxPair.First.Y+args.ViewportOffsetY)*args);
-				if(intersection.HasValue)
+				var intersection = GetLineRectangleIntersection(firstCords, lastCords, args * (DiagramBoxPair.First.X + args.ViewportOffsetX), args * (DiagramBoxPair.First.Y + args.ViewportOffsetY), (DiagramBoxPair.First.X + DiagramBoxPair.First.Width + args.ViewportOffsetX) * args, (DiagramBoxPair.First.Height + DiagramBoxPair.First.Y + args.ViewportOffsetY) * args);
+				if (intersection.HasValue)
 					_oldFirstIntersection = intersection.Value;
-				
+
 				if (_oldFirstIntersection.HasValue)
 				{
 
 					Vector2 v = new(_oldFirstIntersection.Value.X - firstCords.Item1, _oldFirstIntersection.Value.Y - firstCords.Item2);
 					v = Vector2.Normalize(v);
 					var u = new Vector2(v.Y, -v.X);
-					
+
 					//g.FillEllipse(Brushes.Red, _oldFirstIntersection.Value.X - 5, _oldFirstIntersection.Value.Y - 5, 10, 10);
 					/*
 					g.FillEllipse(Brushes.Red, _oldFirstIntersection.Value.X - 5 + v.X * 25 + u.X * 15, _oldFirstIntersection.Value.Y - 5 + v.Y * 25 + u.Y * 15, 10, 10);
 					g.FillEllipse(Brushes.Red,	_oldFirstIntersection.Value.X - 5 + v.X * 25 + -u.X * 15, _oldFirstIntersection.Value.Y - 5 + v.Y * 25 + -u.Y * 15, 10, 10);
 					*/
-					Point left = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + -u.X * 15),(int)(_oldFirstIntersection.Value.Y + v.Y * 25 + -u.Y * 15));
-					Point right = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + u.X * 15),(int)( _oldFirstIntersection.Value.Y  + v.Y * 25 + u.Y * 15));
+					Point left = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + -u.X * 15), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 + -u.Y * 15));
+					Point right = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + u.X * 15), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 + u.Y * 15));
 					switch (ConnectionType)
 					{
 						case ConnectionType.Asociation:
@@ -91,24 +105,24 @@ namespace UMLDiagframApp.Presentation
 
 				}
 				var intersection2 = GetLineRectangleIntersection(firstCords, lastCords, args * (DiagramBoxPair.Second.X + args.ViewportOffsetX), args * (DiagramBoxPair.Second.Y + args.ViewportOffsetY), (DiagramBoxPair.Second.X + DiagramBoxPair.Second.Width + args.ViewportOffsetX) * args, (DiagramBoxPair.Second.Height + DiagramBoxPair.Second.Y + args.ViewportOffsetY) * args);
-				
-				if(intersection2.HasValue) 
+
+				if (intersection2.HasValue)
 					_oldSecondtIntersection = intersection2.Value;
 				if (_oldSecondtIntersection.HasValue)
 				{
-					Vector2 v = new(_oldSecondtIntersection.Value.X-lastCords.Item1,_oldSecondtIntersection.Value.Y-lastCords.Item2);
+					Vector2 v = new(_oldSecondtIntersection.Value.X - lastCords.Item1, _oldSecondtIntersection.Value.Y - lastCords.Item2);
 					v = Vector2.Normalize(v);
 
 					// Pokud existuje průsečík, vykreslit ho
 					g.FillEllipse(Brushes.Red, _oldSecondtIntersection.Value.X - 5, _oldSecondtIntersection.Value.Y - 5, 10, 10);
-					g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X+v.X*50, _oldSecondtIntersection.Value.Y+v.Y*50);
+					g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50, _oldSecondtIntersection.Value.Y + v.Y * 50);
 				}
 			}
 			else
 			{
-				(int, int) cords = (_nodes.First!.X, _nodes.First!.Y) + args;
+				(int, int) cords = (Nodes.First!.X, Nodes.First!.Y) + args;
 
-				ConnectionNode? selectedNode = _nodes.First!;
+				ConnectionNode? selectedNode = Nodes.First!;
 
 				g.DrawLine(Pens.Azure, new(firstCords.Item1, firstCords.Item2), new(cords.Item1, cords.Item2));
 
@@ -155,9 +169,9 @@ namespace UMLDiagframApp.Presentation
 				}
 
 
-				for (int i = 0; i < _nodes.Count; i++)
+				for (int i = 0; i < Nodes.Count; i++)
 				{
-					if (i + 1 >= _nodes.Count)
+					if (i + 1 >= Nodes.Count)
 					{
 						g.DrawLine(Pens.Azure, new(cords.Item1, cords.Item2), new(lastCords.Item1, lastCords.Item2));
 
@@ -179,7 +193,7 @@ namespace UMLDiagframApp.Presentation
 							Vector2 v = new(_oldSecondtIntersection.Value.X - lastCords.Item1, _oldSecondtIntersection.Value.Y - lastCords.Item2);
 							v = Vector2.Normalize(v);
 
-							
+
 							//	g.FillEllipse(Brushes.Red, _oldSecondtIntersection.Value.X - 5, _oldSecondtIntersection.Value.Y - 5, 10, 10);
 							g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50, _oldSecondtIntersection.Value.Y + v.Y * 50);
 						}
@@ -211,7 +225,7 @@ namespace UMLDiagframApp.Presentation
 			Cursor.Current = Cursors.Hand;
 
 
-				(int, int) cords = ((mArgs.PositionX/dArgs-dArgs.ViewportOffsetX), (mArgs.PositionY/dArgs-dArgs.ViewportOffsetY));
+			(int, int) cords = ((mArgs.PositionX / dArgs - dArgs.ViewportOffsetX), (mArgs.PositionY / dArgs - dArgs.ViewportOffsetY));
 
 			if (mArgs.ButtonState == MouseButtonsStates.LeftDown && _selectedNode is null && _selectedSegment is not null)
 			{
@@ -220,15 +234,15 @@ namespace UMLDiagframApp.Presentation
 
 				if (_selectedSegment?.First is not null && _selectedSegment?.Last is not null)
 				{
-					_nodes.AddAfter(_selectedSegment?.First, newNode);
+					Nodes.AddAfter(_selectedSegment?.First, newNode);
 				}
 				else if (_selectedSegment?.First is null && _selectedSegment?.Last is not null)
 				{
-					_nodes.AddBefore(_selectedSegment?.Last,newNode);
+					Nodes.AddBefore(_selectedSegment?.Last, newNode);
 				}
-				else if(_selectedSegment?.First is not null && _selectedSegment?.Last is null)
+				else if (_selectedSegment?.First is not null && _selectedSegment?.Last is null)
 				{
-					_nodes.AddAfter(_selectedSegment?.First, newNode);
+					Nodes.AddAfter(_selectedSegment?.First, newNode);
 				}
 
 			}
@@ -237,7 +251,7 @@ namespace UMLDiagframApp.Presentation
 
 				var newNode = new ConnectionNode(cords.Item1, cords.Item2);
 				_selectedNode = newNode;
-				_nodes.Add(newNode);
+				Nodes.Add(newNode);
 			}
 
 			if (_selectedNode is not null && mArgs.ButtonState == MouseButtonsStates.LeftDown)
@@ -265,41 +279,41 @@ namespace UMLDiagframApp.Presentation
 				Vector2 v = new(_selectedNode.X, _selectedNode.Y);
 				if (_selectedNode.After is not null)
 					if (Vector2.Distance(v, new(_selectedNode.After.X, _selectedNode.After.Y)) <= 20)
-						_nodes.RemoveAfter(_selectedNode);
+						Nodes.RemoveAfter(_selectedNode);
 
 				if (_selectedNode.Before is not null)
 					if (Vector2.Distance(v, new(_selectedNode.Before.X, _selectedNode.Before.Y)) <= 20)
-						_nodes.RemoveBefore(_selectedNode);
+						Nodes.RemoveBefore(_selectedNode);
 
 				if (new Rectangle(DiagramBoxPair.First.X, DiagramBoxPair.First.Y, DiagramBoxPair.First.Width, DiagramBoxPair.First.Height).Contains(_selectedNode.X, _selectedNode.Y))
-					_nodes.Remove(_selectedNode);
+					Nodes.Remove(_selectedNode);
 
 				else if (new Rectangle(DiagramBoxPair.Second.X, DiagramBoxPair.Second.Y, DiagramBoxPair.Second.Width, DiagramBoxPair.Second.Height).Contains(_selectedNode.X, _selectedNode.Y))
-					_nodes.Remove(_selectedNode);
+					Nodes.Remove(_selectedNode);
 
 				_selectionX = null;
 				_selectionY = null;
 
-				var currNode = _nodes.First;
-				int minX=_nodes.First?.X??0;
-				int minY= _nodes.First?.Y??0;
-				int maxX= _nodes.First?.X??0;
-				int maxY= _nodes.First?.Y??0;
+				var currNode = Nodes.First;
+				int minX = Nodes.First?.X ?? 0;
+				int minY = Nodes.First?.Y ?? 0;
+				int maxX = Nodes.First?.X ?? 0;
+				int maxY = Nodes.First?.Y ?? 0;
 				while (currNode!.After != null)
 				{
 					currNode = currNode.After;
-					if(currNode.X < minX) minX = currNode.X;
-					if(currNode.Y < minY) minY = currNode.Y;
-					if(currNode.X > maxX) maxX = currNode.X;
-					if(currNode.Y > maxY) maxY = currNode.Y;
-				} 
-				X= minX;
-				Y= minY;
+					if (currNode.X < minX) minX = currNode.X;
+					if (currNode.Y < minY) minY = currNode.Y;
+					if (currNode.X > maxX) maxX = currNode.X;
+					if (currNode.Y > maxY) maxY = currNode.Y;
+				}
+				X = minX;
+				Y = minY;
 				Width = Math.Abs(maxX - minX);
 				Height = Math.Abs(maxY - minY);
 			}
 
-		
+
 
 			//	throw new NotImplementedException();
 		}
@@ -317,15 +331,15 @@ namespace UMLDiagframApp.Presentation
 			_selectedSegment = null;
 			_selectedNode = null;
 
-			if (_nodes.Count <= 0)
+			if (Nodes.Count <= 0)
 			{
 
 				return SegmentSelcted(firstCords, lastCords);
 			}
 			else
 			{
-				(int, int) cords = (_nodes.First!.X, _nodes.First!.Y) + args;
-				var selectedNode = _nodes.First!;
+				(int, int) cords = (Nodes.First!.X, Nodes.First!.Y) + args;
+				var selectedNode = Nodes.First!;
 
 				Vector2 v2 = new(x, y);
 				Vector2 v1 = new(cords.Item1, cords.Item2);
@@ -343,7 +357,7 @@ namespace UMLDiagframApp.Presentation
 					return true;
 				}
 
-				for (int i = 0; i < _nodes.Count; i++)
+				for (int i = 0; i < Nodes.Count; i++)
 				{
 					v1 = new(cords.Item1, cords.Item2);
 					if (Vector2.Distance(v1, v2) <= 12)
@@ -352,7 +366,7 @@ namespace UMLDiagframApp.Presentation
 						_selectedNode = selectedNode;
 						return true;
 					}
-					if (i + 1 >= _nodes.Count)
+					if (i + 1 >= Nodes.Count)
 					{
 						bool b = SegmentSelcted(cords, lastCords);
 						if (b)

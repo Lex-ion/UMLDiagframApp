@@ -246,6 +246,11 @@ namespace UMLDiagframApp.Presentation
 				JSONManipulator m = new(_drawables, _selectables);
 				m.Save("Data.json");
 			}
+
+			if (keyEvent.KeyCode == Keys.L) {
+				JSONManipulator m = new(_drawables, _selectables);
+				m.Load("Data.json");
+			}
 		}
 
 

@@ -21,8 +21,8 @@ namespace UMLDiagframApp.Presentation
 
 		float lastScale;
 
-		public List<Entities.Attribute> Attributes { get; }
-		public List<Entities.Method> Methods { get; }
+		public List<Entities.Attribute> Attributes { get; set; }
+		public List<Entities.Method> Methods { get; set; }
 		[JsonIgnore]
 		public int CenterX => (int)((X + X + Width) / 2);
 		[JsonIgnore]
