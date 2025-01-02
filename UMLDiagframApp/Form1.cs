@@ -92,6 +92,13 @@ namespace UMLDiagframApp
 			pictureBox1.Refresh();
 		}
 
-	
+		protected override void OnFormClosing(FormClosingEventArgs e)
+		{
+
+			var res = _vp.SaveBeforeSomething();
+			e.Cancel = !res;
+			base.OnFormClosing(e);
+		}
+
 	}
 }

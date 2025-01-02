@@ -28,7 +28,7 @@ namespace UMLDiagframApp.Presentation
 
 		private JSONManipulator _jsonManipulator;
 
-		public ViewPort(int width, int height, SaveFileDialog saveFileDialog,OpenFileDialog openFileDialog)
+		public ViewPort(int width, int height, SaveFileDialog saveFileDialog, OpenFileDialog openFileDialog)
 		{
 			_saveFileDialog = saveFileDialog;
 			_openFileDialog = openFileDialog;
@@ -126,13 +126,11 @@ namespace UMLDiagframApp.Presentation
 						_selected = s;
 
 						OnTop(s);
-						if (s is ConnectionLine)
+						if (s is ConnectionLine cl)
 						{
-							var cl = s as ConnectionLine;
-
 							OnTop(cl.DiagramBoxPair.First);
 							OnTop(cl.DiagramBoxPair.Second);
-							 
+
 						}
 
 
@@ -257,25 +255,25 @@ namespace UMLDiagframApp.Presentation
 
 				ExportToPng(_saveFileDialog.FileName);
 			}
-			if (keyEvent.KeyCode == Keys.F) {
+			if (keyEvent.KeyCode == Keys.F)
+			{
 				_saveFileDialog.Filter = "Soubor C#|*.cs";
 				var result = _saveFileDialog.ShowDialog();
 				if (result != DialogResult.OK)
 					return;
 
-				CodeGen gen = new(_saveFileDialog.FileName, _selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList(), _selectables.Where(s => s is ConnectionLine).Select(s => s as ConnectionLine).ToList());
+				CodeGen gen = new(_saveFileDialog.FileName, _selectables.Where(s => s is DiagramBox).Select(s => (DiagramBox)s).ToList(), _selectables.Where(s => s is ConnectionLine).Select(s => (ConnectionLine)s).ToList());
 				gen.Generate();
 			}
-			if (keyEvent.KeyCode == Keys.S&&keyEvent.Control) {
-				_saveFileDialog.Filter = "Soubor JSON|*.json";
-				var result = _saveFileDialog.ShowDialog();
-				if (result != DialogResult.OK)
-					return;
-
-				_jsonManipulator.Save(_saveFileDialog.FileName);
+			if (keyEvent.KeyCode == Keys.S && keyEvent.Control)
+			{
+				Save();
 			}
 
-			if (keyEvent.KeyCode == Keys.O&&keyEvent.Control) {
+			if (keyEvent.KeyCode == Keys.O && keyEvent.Control)
+			{
+				if(!SaveBeforeSomething())
+					return;
 				var result = _openFileDialog.ShowDialog();
 				if (result != DialogResult.OK)
 					return;
@@ -283,8 +281,42 @@ namespace UMLDiagframApp.Presentation
 				_jsonManipulator.Load(_openFileDialog.FileName);
 				Center();
 			}
+
+			if (keyEvent.Control && keyEvent.KeyCode == Keys.N)
+			{
+				if (!SaveBeforeSomething())
+					return;
+				_drawables.Clear();
+				_selectables.Clear();
+			}
 		}
 
+		public bool SaveBeforeSomething()
+		{
+			var result = MessageBox.Show("Chcete rozpracováný soubour uložit?", "Pozor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+
+			if (result == DialogResult.Cancel)
+				return false;
+
+			if (result == DialogResult.Yes)
+				if (!Save())
+					return false;
+
+			return true;
+
+		}
+
+		public bool Save()
+		{
+
+			_saveFileDialog.Filter = "Soubor JSON|*.json";
+			var result = _saveFileDialog.ShowDialog();
+			if (result != DialogResult.OK)
+				return false;
+
+			_jsonManipulator.Save(_saveFileDialog.FileName);
+			return true;
+		}
 
 
 		public void ExportToPng(string path)
@@ -340,7 +372,7 @@ namespace UMLDiagframApp.Presentation
 					progress++;
 				}
 				g.Save();
-				bitmap.Save(path,System.Drawing.Imaging.ImageFormat.Png);
+				bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Png);
 				g.Dispose();
 				bitmap.Dispose();
 				progressForm.Finished();
