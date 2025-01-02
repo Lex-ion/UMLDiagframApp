@@ -33,10 +33,10 @@ namespace UMLDiagframApp
 			ContextMenuCommand[] baseCommands = [       new("Odstranit",()=>Delete(selected))
 				];
 			ContextMenuCommand[] boxCommands = [
-				new("Přejmenovat",()=>Rename(selected as DiagramBox)),
-				new("Přidat atribut",()=>AddAttribute(selected as DiagramBox)),
-				new("Přidat metodu",()=>AddMethod(selected as DiagramBox)),
-				new("Vytvořit propojení",()=>CreateConnection(selected as DiagramBox,_selectables.Where(s=> s is DiagramBox).Select(d=>d as DiagramBox).ToList<DiagramBox>())),
+				new("Přejmenovat",()=>Rename((DiagramBox)selected)),
+				new("Přidat atribut",()=>AddAttribute((DiagramBox)selected)),
+				new("Přidat metodu",()=>AddMethod((DiagramBox)selected)),
+				new("Vytvořit propojení",()=>CreateConnection((DiagramBox)selected,_selectables.Where(s=> s is DiagramBox).Select(d=>(DiagramBox)d).ToList<DiagramBox>())),
 
 			];
 
@@ -268,7 +268,7 @@ namespace UMLDiagframApp
 
 			var con = new ConnectionLine(box, boxes.First(bs => bs.Name == b));
 
-			if(_selectables.Where(s=>s is ConnectionLine).Select(s=>s as  ConnectionLine).Any(s=>s.DiagramBoxPair==con.DiagramBoxPair))
+			if(_selectables.Where(s=>s is ConnectionLine).Select(s=>(ConnectionLine)s ).Any(s=>s.DiagramBoxPair==con.DiagramBoxPair))
 			{
 				return;
 			}

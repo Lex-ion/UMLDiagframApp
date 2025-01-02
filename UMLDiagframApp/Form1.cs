@@ -82,13 +82,16 @@ namespace UMLDiagframApp
 
 		private void Form1_Resize(object sender, EventArgs e)
 		{
+			if(_vp is not null)
 			_vp.Resize(Width, Height);
 			pictureBox1?.Refresh();
 		}
 
 		private void Form1_KeyDown(object sender, KeyEventArgs e)
 		{
-			_vp.HandleKeyInput(e);
+
+			if (_vp is not null)
+				_vp.HandleKeyInput(e);
 			pictureBox1.Refresh();
 		}
 

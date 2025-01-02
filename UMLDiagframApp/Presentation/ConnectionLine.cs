@@ -40,14 +40,15 @@ namespace UMLDiagframApp.Presentation
 			ConnectionType = ConnectionType.Asociation;
 		}
 
-		public ConnectionLine(ConnectionLineDTO dto,DiagramBoxPair pair) : base(dto.X, dto.Y, dto.Width, dto.Height)
+		public ConnectionLine(ConnectionLineDTO dto, DiagramBoxPair pair) : base(dto.X, dto.Y, dto.Width, dto.Height)
 		{
 			Nodes = new ConnectionNodeList();
 			DiagramBoxPair = pair;
 			FirstMultiplicity = dto.FirstMultiplicity;
 			SecondMultiplicity = dto.SecondMultiplicity;
 			ConnectionType = dto.ConnectionType;
-			foreach (var node in dto.Nodes) {
+			foreach (var node in dto.Nodes)
+			{
 				Nodes.Add(new(node.X, node.Y));
 			}
 
@@ -75,8 +76,8 @@ namespace UMLDiagframApp.Presentation
 					v = Vector2.Normalize(v);
 					var u = new Vector2(v.Y, -v.X);
 
-					Point left = new((int)(_oldFirstIntersection.Value.X + v.X * 25*args + -u.X * 15*args), (int)(_oldFirstIntersection.Value.Y + v.Y * 25*args + -u.Y * 15*args));
-					Point right = new((int)(_oldFirstIntersection.Value.X + v.X * 25*args + u.X * 15*args), (int)(_oldFirstIntersection.Value.Y + v.Y * 25*args + u.Y * 15*args));
+					Point left = new((int)(_oldFirstIntersection.Value.X + v.X * 25 * args + -u.X * 15 * args), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 * args + -u.Y * 15 * args));
+					Point right = new((int)(_oldFirstIntersection.Value.X + v.X * 25 * args + u.X * 15 * args), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 * args + u.Y * 15 * args));
 					switch (ConnectionType)
 					{
 						case ConnectionType.Asociation:
@@ -87,10 +88,10 @@ namespace UMLDiagframApp.Presentation
 							g.DrawLine(Pens.Azure, _oldFirstIntersection.Value, right);
 							break;
 						case ConnectionType.Agregation:
-							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50*args, _oldFirstIntersection.Value.Y + v.Y * 50*args), left]);
+							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50 * args, _oldFirstIntersection.Value.Y + v.Y * 50 * args), left]);
 							break;
 						case ConnectionType.Composition:
-							g.FillPolygon(Brushes.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50*args, _oldFirstIntersection.Value.Y + v.Y * 50*args), left]);
+							g.FillPolygon(Brushes.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50 * args, _oldFirstIntersection.Value.Y + v.Y * 50 * args), left]);
 							break;
 						case ConnectionType.Generalization:
 							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, left]);
@@ -111,7 +112,7 @@ namespace UMLDiagframApp.Presentation
 					v = Vector2.Normalize(v);
 
 					if (ConnectionType != ConnectionType.Generalization)
-						g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50*args, _oldSecondtIntersection.Value.Y + v.Y * 50*args);
+						g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50 * args, _oldSecondtIntersection.Value.Y + v.Y * 50 * args);
 				}
 			}
 			else
@@ -148,10 +149,10 @@ namespace UMLDiagframApp.Presentation
 							g.DrawLine(Pens.Azure, _oldFirstIntersection.Value, right);
 							break;
 						case ConnectionType.Agregation:
-							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50*args, _oldFirstIntersection.Value.Y + v.Y * 50*args), left]);
+							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50 * args, _oldFirstIntersection.Value.Y + v.Y * 50 * args), left]);
 							break;
 						case ConnectionType.Composition:
-							g.FillPolygon(Brushes.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50*args, _oldFirstIntersection.Value.Y + v.Y * 50*args), left]);
+							g.FillPolygon(Brushes.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50 * args, _oldFirstIntersection.Value.Y + v.Y * 50 * args), left]);
 							break;
 						case ConnectionType.Generalization:
 							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, left]);
@@ -159,7 +160,7 @@ namespace UMLDiagframApp.Presentation
 					}
 
 					if (ConnectionType != ConnectionType.Generalization)
-						g.DrawString(FirstMultiplicity, f, Brushes.Black, _oldFirstIntersection.Value.X + v.X * 50*args, _oldFirstIntersection.Value.Y + v.Y * 50*args);
+						g.DrawString(FirstMultiplicity, f, Brushes.Black, _oldFirstIntersection.Value.X + v.X * 50 * args, _oldFirstIntersection.Value.Y + v.Y * 50 * args);
 
 
 				}
@@ -189,8 +190,8 @@ namespace UMLDiagframApp.Presentation
 							Vector2 v = new(_oldSecondtIntersection.Value.X - lastCords.Item1, _oldSecondtIntersection.Value.Y - lastCords.Item2);
 							v = Vector2.Normalize(v);
 
-							if(ConnectionType !=ConnectionType.Generalization)
-							g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50, _oldSecondtIntersection.Value.Y + v.Y * 50);
+							if (ConnectionType != ConnectionType.Generalization)
+								g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50, _oldSecondtIntersection.Value.Y + v.Y * 50);
 						}
 
 						break;
@@ -211,7 +212,7 @@ namespace UMLDiagframApp.Presentation
 
 				}
 			}
-		//	g.DrawString(dist.ToString(), SystemFonts.DefaultFont, Brushes.Black, new Point(0, 0));
+			//	g.DrawString(dist.ToString(), SystemFonts.DefaultFont, Brushes.Black, new Point(0, 0));
 		}
 
 
@@ -229,15 +230,15 @@ namespace UMLDiagframApp.Presentation
 
 				if (_selectedSegment?.First is not null && _selectedSegment?.Last is not null)
 				{
-					Nodes.AddAfter(_selectedSegment?.First, newNode);
+					Nodes.AddAfter(_selectedSegment.Value.First, newNode);
 				}
 				else if (_selectedSegment?.First is null && _selectedSegment?.Last is not null)
 				{
-					Nodes.AddBefore(_selectedSegment?.Last, newNode);
+					Nodes.AddBefore(_selectedSegment.Value.Last, newNode);
 				}
 				else if (_selectedSegment?.First is not null && _selectedSegment?.Last is null)
 				{
-					Nodes.AddAfter(_selectedSegment?.First, newNode);
+					Nodes.AddAfter(_selectedSegment!.Value.First, newNode);
 				}
 
 			}
