@@ -246,7 +246,7 @@ namespace UMLDiagframApp.Presentation
 		public void HandleKeyInput(KeyEventArgs keyEvent)
 		{
 			//system input handle ctrl+s and etc...
-			if (keyEvent.KeyCode == Keys.E)
+			if (keyEvent.KeyCode == Keys.E&&keyEvent.Control)
 			{
 				_saveFileDialog.Filter = "Obrázek PNG|*.png";
 				var result = _saveFileDialog.ShowDialog();
@@ -255,7 +255,8 @@ namespace UMLDiagframApp.Presentation
 
 				ExportToPng(_saveFileDialog.FileName);
 			}
-			if (keyEvent.KeyCode == Keys.F)
+			else
+			if (keyEvent.KeyCode == Keys.F && keyEvent.Control)
 			{
 				_saveFileDialog.Filter = "Soubor C#|*.cs";
 				var result = _saveFileDialog.ShowDialog();
@@ -265,11 +266,12 @@ namespace UMLDiagframApp.Presentation
 				CodeGen gen = new(_saveFileDialog.FileName, _selectables.Where(s => s is DiagramBox).Select(s => (DiagramBox)s).ToList(), _selectables.Where(s => s is ConnectionLine).Select(s => (ConnectionLine)s).ToList());
 				gen.Generate();
 			}
+			else
 			if (keyEvent.KeyCode == Keys.S && keyEvent.Control)
 			{
 				Save();
 			}
-
+			else
 			if (keyEvent.KeyCode == Keys.O && keyEvent.Control)
 			{
 				if(!SaveBeforeSomething())
@@ -281,7 +283,7 @@ namespace UMLDiagframApp.Presentation
 				_jsonManipulator.Load(_openFileDialog.FileName);
 				Center();
 			}
-
+			else
 			if (keyEvent.Control && keyEvent.KeyCode == Keys.N)
 			{
 				if (!SaveBeforeSomething())
