@@ -295,6 +295,7 @@ namespace UMLDiagframApp.Presentation
 				int minY = Nodes.First?.Y ?? 0;
 				int maxX = Nodes.First?.X ?? 0;
 				int maxY = Nodes.First?.Y ?? 0;
+				if (currNode != null)
 				while (currNode!.After != null)
 				{
 					currNode = currNode.After;
