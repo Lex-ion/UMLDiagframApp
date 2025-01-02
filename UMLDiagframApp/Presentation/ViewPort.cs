@@ -303,6 +303,7 @@ namespace UMLDiagframApp.Presentation
 				if (keyEvent.KeyCode == Keys.X && keyEvent.Shift)
 				{
 					_menuFactory.Delete(_selected);
+					_selected= null;
 				}
 
 				if (_selected is DiagramBox db)
