@@ -75,8 +75,8 @@ namespace UMLDiagframApp.Presentation
 					v = Vector2.Normalize(v);
 					var u = new Vector2(v.Y, -v.X);
 
-					Point left = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + -u.X * 15), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 + -u.Y * 15));
-					Point right = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + u.X * 15), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 + u.Y * 15));
+					Point left = new((int)(_oldFirstIntersection.Value.X + v.X * 25*args + -u.X * 15*args), (int)(_oldFirstIntersection.Value.Y + v.Y * 25*args + -u.Y * 15*args));
+					Point right = new((int)(_oldFirstIntersection.Value.X + v.X * 25*args + u.X * 15*args), (int)(_oldFirstIntersection.Value.Y + v.Y * 25*args + u.Y * 15*args));
 					switch (ConnectionType)
 					{
 						case ConnectionType.Asociation:
@@ -87,10 +87,10 @@ namespace UMLDiagframApp.Presentation
 							g.DrawLine(Pens.Azure, _oldFirstIntersection.Value, right);
 							break;
 						case ConnectionType.Agregation:
-							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50), left]);
+							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50*args, _oldFirstIntersection.Value.Y + v.Y * 50*args), left]);
 							break;
 						case ConnectionType.Composition:
-							g.FillPolygon(Brushes.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50), left]);
+							g.FillPolygon(Brushes.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50*args, _oldFirstIntersection.Value.Y + v.Y * 50*args), left]);
 							break;
 						case ConnectionType.Generalization:
 							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, left]);
@@ -111,7 +111,7 @@ namespace UMLDiagframApp.Presentation
 					v = Vector2.Normalize(v);
 
 					if (ConnectionType != ConnectionType.Generalization)
-						g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50, _oldSecondtIntersection.Value.Y + v.Y * 50);
+						g.DrawString(SecondMultiplicity, f, Brushes.Black, _oldSecondtIntersection.Value.X + v.X * 50*args, _oldSecondtIntersection.Value.Y + v.Y * 50*args);
 				}
 			}
 			else
@@ -133,10 +133,11 @@ namespace UMLDiagframApp.Presentation
 					v = Vector2.Normalize(v);
 
 					var u = new Vector2(v.Y, -v.X);
-					
 
-					Point left = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + -u.X * 15), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 + -u.Y * 15));
-					Point right = new((int)(_oldFirstIntersection.Value.X + v.X * 25 + u.X * 15), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 + u.Y * 15));
+
+
+					Point left = new((int)(_oldFirstIntersection.Value.X + v.X * 25 * args + -u.X * 15 * args), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 * args + -u.Y * 15 * args));
+					Point right = new((int)(_oldFirstIntersection.Value.X + v.X * 25 * args + u.X * 15 * args), (int)(_oldFirstIntersection.Value.Y + v.Y * 25 * args + u.Y * 15 * args));
 					switch (ConnectionType)
 					{
 						case ConnectionType.Asociation:
@@ -147,10 +148,10 @@ namespace UMLDiagframApp.Presentation
 							g.DrawLine(Pens.Azure, _oldFirstIntersection.Value, right);
 							break;
 						case ConnectionType.Agregation:
-							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50), left]);
+							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50*args, _oldFirstIntersection.Value.Y + v.Y * 50*args), left]);
 							break;
 						case ConnectionType.Composition:
-							g.FillPolygon(Brushes.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50), left]);
+							g.FillPolygon(Brushes.Azure, [_oldFirstIntersection.Value, right, new(_oldFirstIntersection.Value.X + v.X * 50*args, _oldFirstIntersection.Value.Y + v.Y * 50*args), left]);
 							break;
 						case ConnectionType.Generalization:
 							g.DrawPolygon(Pens.Azure, [_oldFirstIntersection.Value, right, left]);
@@ -158,7 +159,7 @@ namespace UMLDiagframApp.Presentation
 					}
 
 					if (ConnectionType != ConnectionType.Generalization)
-						g.DrawString(FirstMultiplicity, f, Brushes.Black, _oldFirstIntersection.Value.X + v.X * 50, _oldFirstIntersection.Value.Y + v.Y * 50);
+						g.DrawString(FirstMultiplicity, f, Brushes.Black, _oldFirstIntersection.Value.X + v.X * 50*args, _oldFirstIntersection.Value.Y + v.Y * 50*args);
 
 
 				}
