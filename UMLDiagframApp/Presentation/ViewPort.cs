@@ -291,6 +291,24 @@ namespace UMLDiagframApp.Presentation
 				_drawables.Clear();
 				_selectables.Clear();
 			}
+			else
+			if (keyEvent.KeyCode == Keys.A && keyEvent.Shift)
+			{
+				_menuFactory.CreateNew(-_args.ViewportOffsetX + _args.ViewportSizeX / 2, -_args.ViewportOffsetY + _args.ViewportSizeY / 2);//add scale
+			}
+			else
+			if(_selected is not null)
+			{
+
+				if (keyEvent.KeyCode == Keys.X && keyEvent.Shift)
+				{
+					_menuFactory.Delete(_selected);
+				}
+
+				if (_selected is DiagramBox db)
+				{
+				}
+			}
 		}
 
 		public bool SaveBeforeSomething()

@@ -107,7 +107,7 @@ namespace UMLDiagframApp
 			_args.ViewportOffsetY = (int)((_args.ViewportSizeY / 2 - (int)_drawables.Average(d => d.Y * _args.ViewportScale)) / _args.ViewportScale);
 		}
 
-		private void CreateNew(int x, int y)
+		public void CreateNew(int x, int y)
 		{
 
 			TextInputForm t = new("", new ClassNameValidationStrategy(_selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList()!));
@@ -122,7 +122,7 @@ namespace UMLDiagframApp
 			_selectables.Add(d);
 		}
 
-		private void Delete(ISelectable s)
+		public void Delete(ISelectable s)
 		{
 			_drawables.Remove(s);
 			_selectables.Remove(s);
