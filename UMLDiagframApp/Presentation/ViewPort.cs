@@ -294,7 +294,7 @@ namespace UMLDiagframApp.Presentation
 			else
 			if (keyEvent.KeyCode == Keys.A && keyEvent.Shift)
 			{
-				_menuFactory.CreateNew(-_args.ViewportOffsetX + _args.ViewportSizeX / 2, -_args.ViewportOffsetY + _args.ViewportSizeY / 2);//add scale
+				_menuFactory.CreateNew(-_args.ViewportOffsetX*_args + _args.ViewportSizeX / 2, -_args.ViewportOffsetY*_args + _args.ViewportSizeY / 2);
 			}
 			else
 			if(_selected is not null)
@@ -308,6 +308,16 @@ namespace UMLDiagframApp.Presentation
 
 				if (_selected is DiagramBox db)
 				{
+					if (keyEvent.KeyCode == Keys.R && keyEvent.Shift)
+					{
+						_menuFactory.Rename(db);
+					}else if (keyEvent.KeyCode == Keys.M && keyEvent.Shift)
+						_menuFactory.AddMethod(db);
+					else if (keyEvent.KeyCode == Keys.N && keyEvent.Shift)
+						_menuFactory.AddAttribute(db);
+					else if(keyEvent.KeyCode == Keys.C && keyEvent.Shift)
+						_menuFactory.CreateConnection(db);
+
 				}
 			}
 		}

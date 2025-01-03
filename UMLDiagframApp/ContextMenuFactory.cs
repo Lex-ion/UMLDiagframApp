@@ -128,7 +128,7 @@ namespace UMLDiagframApp
 			_selectables.Remove(s);
 		}
 
-		private void Rename(DiagramBox box)
+		public void Rename(DiagramBox box)
 		{
 			TextInputForm t = new(box.Name, new ClassNameValidationStrategy(_selectables.Where(s => s is DiagramBox).Select(s => s as DiagramBox).ToList()!));
 			t.ShowDialog();
@@ -141,7 +141,7 @@ namespace UMLDiagframApp
 
 		}
 
-		private void AddMethod(DiagramBox box)
+		public void AddMethod(DiagramBox box)
 		{
 			TextInputForm t = new("", new MethodValidationStrategy());
 			t.ShowDialog();
@@ -203,7 +203,7 @@ namespace UMLDiagframApp
 
 		}
 
-		private void AddAttribute(DiagramBox box)
+		public void AddAttribute(DiagramBox box)
 		{
 			TextInputForm t = new("", new AttributeValidationStrategy());
 			t.ShowDialog();
@@ -258,7 +258,11 @@ namespace UMLDiagframApp
 			box.Changed=true;
 		}
 
-		private void CreateConnection(DiagramBox box, List<DiagramBox> boxes)
+		public void CreateConnection(DiagramBox box)
+		{
+			CreateConnection(box,_selectables.Where(s=>s is DiagramBox).Select(s=>(DiagramBox)s).ToList());
+		}
+		public void CreateConnection(DiagramBox box, List<DiagramBox> boxes)
 		{
 			TextInputForm t = new TextInputForm("", new ConnectionValidationStrategy(box.Name,_selectables));
 			t.ShowDialog();
