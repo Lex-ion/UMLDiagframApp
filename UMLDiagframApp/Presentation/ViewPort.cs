@@ -43,7 +43,7 @@ namespace UMLDiagframApp.Presentation
 					_drawables.Add(new Circle(15 + i * 15, 15 + j * 15));
 				}
 			}*/
-
+			/*
 			for (int i = 0; i < 5; i++)
 			{
 
@@ -51,7 +51,7 @@ namespace UMLDiagframApp.Presentation
 
 				_drawables.Add(db);
 				_selectables.Add(db);
-			}
+			}*/
 
 			_args.ViewportScale = 1;
 			_args.ViewportSizeX = width;
