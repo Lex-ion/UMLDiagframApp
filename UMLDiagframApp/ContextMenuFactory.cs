@@ -292,7 +292,7 @@ namespace UMLDiagframApp
 		private void ChangeMultiplicity(bool isFirst, ConnectionLine line)
 		{
 
-			TextInputForm t = new TextInputForm("", new NoneValidationStrategy());
+			TextInputForm t = new TextInputForm("", new MultiplicityValidiationStrategy());
 			t.ShowDialog();
 			if (t.DialogResult == DialogResult.Abort)
 				return;
