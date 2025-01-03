@@ -35,14 +35,14 @@ namespace UMLDiagframApp.Presentation
 
 			_args = new(width, height, 0, 0, 1);
 			_drawables = new List<IDrawable>();
-			_selectables = new List<ISelectable>();
+			_selectables = new List<ISelectable>();/*
 			for (int i = 0; i < 15; i++)
 			{
 				for (int j = 0; j < 15; j++)
 				{
 					_drawables.Add(new Circle(15 + i * 15, 15 + j * 15));
 				}
-			}
+			}*/
 
 			for (int i = 0; i < 5; i++)
 			{
@@ -100,14 +100,14 @@ namespace UMLDiagframApp.Presentation
 					_selectables.Remove((d as ISelectable)!);
 				}
 			}
-
+/*
 			g.DrawString("Offset: " + _args.ViewportOffsetX + " ; " + _args.ViewportOffsetY, SystemFonts.DefaultFont, Brushes.Black, new PointF(10, 10));
 			g.DrawString("Size: " + _args.ViewportSizeX + " ; " + _args.ViewportSizeY, SystemFonts.DefaultFont, Brushes.Black, new PointF(10, 20));
 			g.DrawString("Scale: " + _args.ViewportScale, SystemFonts.DefaultFont, Brushes.Black, new PointF(10, 30));
 			g.DrawString("Mouse: " + x + " ; " + y, SystemFonts.DefaultFont, Brushes.Black, new PointF(10, 40));
 			g.DrawString("Mouse deltas: " + dx + " ; " + dy, SystemFonts.DefaultFont, Brushes.Black, new PointF(10, 50));
 			g.DrawString("Mouse state: " + mouseArgs?.Button + " ; " + mouseArgs?.ButtonState + " ; " + mouseArgs?.LeftMouseDown + " ; " + mouseArgs?.RightMouseDown, SystemFonts.DefaultFont, Brushes.Black, new PointF(10, 60));
-
+*/
 
 		}
 
