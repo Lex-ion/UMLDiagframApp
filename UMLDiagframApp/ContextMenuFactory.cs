@@ -30,6 +30,7 @@ namespace UMLDiagframApp
 
 		public ContextMenu GetSelectedMenu(int x, int y, ISelectable selected)
 		{
+
 			ContextMenuCommand[] baseCommands = [       new("Odstranit",()=>Delete(selected))
 				];
 			ContextMenuCommand[] boxCommands = [

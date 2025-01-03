@@ -1,4 +1,5 @@
 ﻿using UMLDiagframApp.Entities;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 namespace UMLDiagframApp.Presentation
 {
@@ -166,6 +167,8 @@ namespace UMLDiagframApp.Presentation
 				}
 				else if (args.ButtonState == MouseButtonsStates.RightUp)
 				{
+					if (_selected is ContextMenu)
+						return;
 					var cords = (args.PositionX - _args.ViewportOffsetX, args.PositionY - _args.ViewportOffsetY);
 					ContextMenu menu = _selected is null ? _menuFactory.GetViewPortMenu(cords.Item1 - 1, cords.Item2 - 1)
 						: _menuFactory.GetSelectedMenu(cords.Item1 - 1, cords.Item2 - 1, _selected);
